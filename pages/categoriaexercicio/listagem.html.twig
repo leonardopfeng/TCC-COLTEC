@@ -37,6 +37,7 @@
                     <tr>
                         <th data-column-id="id" >Código</th>
                         <th data-column-id="nome" data-order="desc" data-sortable="true">Nome</th>
+                        <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
                     </tr>
                     </thead>
                 </table>
@@ -62,7 +63,7 @@
         $(document).ready(function(){
             grid = $("#grid-data").bootgrid({
                 ajax: true,
-                url: "/pessoas/bootgrid",
+                url: "/categoriaexercicio/bootgrid",
                 formatters: {
                     "commands": function(column, row)
                     {

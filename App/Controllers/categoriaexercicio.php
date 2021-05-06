@@ -101,7 +101,7 @@ public function salvarEditar()
 public function excluir(){
     $db = Conexao::connect();
 
-    $sql = "DELETE FROM pessoas WHERE id=:id";
+    $sql = "DELETE FROM categoriaexercicio WHERE id=:id";
 
     $query = $db->prepare($sql);
     $query->bindParam(":id", $_POST['id']);
@@ -123,7 +123,7 @@ public function bootgrid()
     if ($busca!=''){
         $sql .= " and (
                         id LIKE '%{$busca}%' OR
-                        nome LIKE '%{$busca}%' OR
+                        nome LIKE '%{$busca}%'
                         ) ";
     }
 
