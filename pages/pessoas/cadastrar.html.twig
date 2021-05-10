@@ -51,6 +51,7 @@
                             <div class="form-group">
                                 <label for="tipo">Tipo</label>
                                 <select class="form-control" id="tipo" name="tipo" required>
+                                    <option value="">- Selecione -</option>
                                     <option value="admin">Admin</option>
                                     <option value="personal">Personal</option>
                                     <option value="cliente">Cliente</option>
@@ -71,6 +72,16 @@
                                 <label for="confsenha">Confirmação da senha</label>
                                 <input type="password" class="form-control" id="confsenha" name="confsenha" placeholder="Repita a senha" required>
                             </div>
+                            <div id="personal" style="display: none">
+                                personal
+                            </div>
+                            <div id="admin" style="display: none">
+                                admin
+                            </div>
+                            <div id="cliente" style="display: none">
+                                cliente
+                            </div>
+
 
 
                         </div>
@@ -115,6 +126,26 @@
                     }
                 }
 
+            });
+
+            $("#tipo").on("change", function (){
+               switch ($(this).val()){
+                   case 'admin':
+                       $("#admin").show();
+                       $("#personal").hide();
+                       $("#cliente").hide();
+                       break;
+                   case 'personal':
+                       $("#admin").hide();
+                       $("#personal").show();
+                       $("#cliente").hide();
+                       break;
+                   case 'cliente':
+                       $("#admin").hide();
+                       $("#personal").hide();
+                       $("#cliente").show();
+                       break;
+               }
             });
         });
     </script>
