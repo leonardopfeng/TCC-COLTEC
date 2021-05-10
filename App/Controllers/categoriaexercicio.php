@@ -64,7 +64,7 @@ public function salvarCadastrar()
     $query->execute();
 
     if ($query->rowCount()==1) {
-        $this->retornaOK('A pessoa foi cadastrada com sucesso');
+        $this->retornaOK('A categoria foi cadastrada com sucesso');
     }
 
 }
@@ -72,29 +72,23 @@ public function salvarCadastrar()
 
 public function salvarEditar()
 {
+    try {
+        $db = Conexao::connect();
 
-    if($_POST['senha']!=$_POST['confsenha']){
-        $this->retornaErro('Senha inserida não está igual');
-    }
+        $sql = "UPDATE categoriaexercicio SET nom1e=:nome WHERE id=:id";
 
-    $criptografaSenha = sha1($_POST['senha']);
+        $query = $db->prepare($sql);
+        $query->bindParam(":nome", $_POST['nome']);
+        $query->bindParam(":id", $_POST['id']);
+        $query->execute();
 
-    $db = Conexao::connect();
-
-    $sql = "UPDATE pessoas SET nome=:nome, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
-
-    $query = $db->prepare($sql);
-    $query->bindParam(":nome", $_POST['nome']);
-    $query->bindParam(":usuario", $_POST['usuario']);
-    $query->bindParam(":tipo", $_POST['tipo']);
-    $query->bindParam(":senha", $criptografaSenha);
-    $query->bindParam(":id", $_POST['id']);
-    $query->execute();
-
-    if ($query->rowCount()==1) {
-        $this->retornaOK('A pessoa foi alterada com sucesso');
-    }else{
-        $this->retornaOK('Nenhum dado alterado');
+        if ($query->rowCount()==1) {
+            $this->retornaOK('A categoria foi alterada com sucesso');
+        }else{
+            $this->retornaOK('Nenhum dado alterado');
+        }
+    }catch(\Exception $e){
+        $this->retornaErro('Erro: ' . $e->getMessage());
     }
 }
 

@@ -42,10 +42,10 @@ class Pessoas Extends Controller
     {
 
         if($_POST['senha']!=$_POST['confsenha']){
-            $this->retornaErro('As senhas nãp estão iguais');
+            $this->retornaErro('As senhas não estão iguais');
         }
 
-        $criptografaSenha = sha1($_POST['senha']);
+        $criptografaSenha = $this->criptografa($_POST['senha']);
 
 
         $db = Conexao::connect();
