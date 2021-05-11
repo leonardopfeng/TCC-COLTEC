@@ -36,21 +36,7 @@ class Personal Extends Controller
         echo $this->template->twig->render('personal/editar.html.twig', compact('linha'));
     }
 
-    public function buscaPessoa($pessoa)
-    {
-        $db = Conexao::connect();
 
-        $sql = "SELECT * FROM personal WHERE pessoa=:pessoa";
-
-        $query = $db->prepare($sql);
-        $query->bindParam(":pessoa", $pessoa);
-
-        $resultado = $query->execute();
-
-        $linha = $query->fetch();
-
-        echo $this->template->twig->render('personal/cadastrar.html.twig', compact('linha'));
-    }
 
 
     public function salvarCadastrar()

@@ -45,7 +45,7 @@
 
                             <div class="form-group">
                                 <label for="telefone">Telefone</label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required>
+                                <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required>
                             </div>
 
                             <div class="form-group">
@@ -76,7 +76,7 @@
                             <div id="personal" style="display: none">
                                 <div class="form-group">
                                     <label for="cref">CREF</label>
-                                    <input type="cref" class="form-control" id="cref" name="cref" placeholder="CREF" required>
+                                    <input type="cref" class="form-control" id="cref" name="cref" placeholder="CREF" >
                                 </div>
                             </div>
 
@@ -84,7 +84,7 @@
                                 admin
                             </div>
 
-                            <div id="cliente" style="display: none">
+                           <div id="cliente" style="display: none">
                                 cliente
                             </div>
 
@@ -135,28 +135,28 @@
             });
 
             $("#tipo").on("change", function (){
-               switch ($(this).val()){
-                   case 'admin':
-                       $("#admin").show();
-                       $("#personal").hide();
-                       $("#cliente").hide();
-                       break;
-                   case 'personal':
-                       $("#admin").hide();
-                       $("#personal").show();
-                       $("#cliente").hide();
-                       break;
-                   case 'cliente':
-                       $("#admin").hide();
-                       $("#personal").hide();
-                       $("#cliente").show();
-                       break;
-                   case '':
-                       $("#admin").hide();
-                       $("#personal").hide();
-                       $("#cliente").hide();
-                       break;
-               }
+                switch ($(this).val()){
+                    case 'admin':
+                        $("#admin").show();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                    case 'personal':
+                        $("#admin").hide();
+                        $("#personal").show();
+                        $("#cliente").hide();
+                        break;
+                    case 'cliente':
+                        $("#personal").hide();
+                        $("#cliente").show();
+                        $("#admin").hide();
+                        break;
+                    case '':
+                        $("#admin").hide();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                }
             });
         });
     </script>

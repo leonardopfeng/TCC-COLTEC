@@ -36,6 +36,20 @@ class Pessoas Extends Controller
         echo $this->template->twig->render('pessoas/editar.html.twig', compact('linha'));
     }
 
+    public function buscaPessoa()
+    {
+        $db = Conexao::connect();
+
+        $sql = "SELECT * FROM personal";
+
+        $query = $db->prepare($sql);
+
+        $resultado = $query->execute();
+
+        $linhapersonal = $query->fetch();
+
+        echo $this->template->twig->render('pessoas/cadastrar.html.twig', compact('linhapersonal'));
+    }
 
 
     public function salvarCadastrar()
@@ -59,21 +73,30 @@ class Pessoas Extends Controller
         $query->bindParam(":senha", $criptografaSenha);
         $query->execute();
 
-        if($_POST['tipo']=='personal'){
-            $sqlpersonal = "INSERT INTO personal(pessoa, cref, data_cadastro) VALUES(:pessoa, :cref, NOW())";
-            $querypersonal = $db->prepare($sqlpersonal);
-            $querypersonal->bindValue(':pessoa', $db->lastInsertId());
-            $querypersonal->bindValue(':cref', $_POST['cref']);
-            $querypersonal->execute();
-        }
 
-        if($_POST['tipo']=='cliente'){
-            $sqlpessoa = "INSERT INTO clientes(pessoa) VALUES(:pessoa)";
-            $querypessoa = $db->prepare($sqlpessoa);
-            $querypessoa->bindValue(':pessoa', $db->lastInsertId());
-            $querypessoa->execute();
-        }
+        switch ($_POST['tipo']){
 
+            case 'personal':
+
+                $sqlpessoa = "INSERT INTO personal(pessoa, cref, data_cadastro) VALUES(:pessoa, :cref, NOW())";
+                $querypessoa = $db->prepare($sqlpessoa);
+                $querypessoa->bindValue(':pessoa', $db->lastInsertId());
+                $querypessoa->bindValue(':cref', $_POST['cref']);
+                $querypessoa->execute();
+
+                break;
+
+            case 'cliente':
+
+                $sqlpessoa = "INSERT INTO clientes(pessoa) VALUES(:pessoa)";
+                $querypessoa = $db->prepare($sqlpessoa);
+                $querypessoa->bindValue(':pessoa', $db->lastInsertId());
+                $querypessoa->execute();
+
+                break;
+
+        }
+        
         if ($query->rowCount()==1) {
             $this->retornaOK('A pessoa foi cadastrada com sucesso');
         }else{
