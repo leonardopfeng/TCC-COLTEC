@@ -72,12 +72,18 @@
                                 <label for="confsenha">Confirmação da senha</label>
                                 <input type="password" class="form-control" id="confsenha" name="confsenha" placeholder="Repita a senha" required>
                             </div>
+
                             <div id="personal" style="display: none">
-                                personal
+                                <div class="form-group">
+                                    <label for="cref">CREF</label>
+                                    <input type="cref" class="form-control" id="cref" name="cref" placeholder="CREF" required>
+                                </div>
                             </div>
+
                             <div id="admin" style="display: none">
                                 admin
                             </div>
+
                             <div id="cliente" style="display: none">
                                 cliente
                             </div>
@@ -144,6 +150,11 @@
                        $("#admin").hide();
                        $("#personal").hide();
                        $("#cliente").show();
+                       break;
+                   case '':
+                       $("#admin").hide();
+                       $("#personal").hide();
+                       $("#cliente").hide();
                        break;
                }
             });

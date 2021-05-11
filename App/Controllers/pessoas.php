@@ -60,10 +60,11 @@ class Pessoas Extends Controller
         $query->execute();
 
         if($_POST['tipo']=='personal'){
-            $sqlpessoa = "INSERT INTO personal(pessoa) VALUES(:pessoa)";
-            $querypessoa = $db->prepare($sqlpessoa);
-            $querypessoa->bindValue(':pessoa', $db->lastInsertId());
-            $querypessoa->execute();
+            $sqlpersonal = "INSERT INTO personal(pessoa, cref, data_cadastro) VALUES(:pessoa, :cref, NOW())";
+            $querypersonal = $db->prepare($sqlpersonal);
+            $querypersonal->bindValue(':pessoa', $db->lastInsertId());
+            $querypersonal->bindValue(':cref', $_POST['cref']);
+            $querypersonal->execute();
         }
 
         if($_POST['tipo']=='cliente'){
