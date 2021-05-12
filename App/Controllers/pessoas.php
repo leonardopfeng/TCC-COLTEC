@@ -17,7 +17,18 @@ class Pessoas Extends Controller
 
     public function formCadastrar()
     {
-        echo $this->template->twig->render('pessoas/cadastrar.html.twig');
+        $db = Conexao::connect();
+
+        $sql = "SELECT * FROM personal";
+
+        $query = $db->prepare($sql);
+
+        $query->execute();
+
+        $linhapersonal = $query->fetchAll();
+        print_r($linhapersonal);
+
+        echo $this->template->twig->render('pessoas/cadastrar.html.twig', compact('linhapersonal'));
     }
 
     public function formEditar($id)
@@ -38,17 +49,6 @@ class Pessoas Extends Controller
 
     public function buscaPessoa()
     {
-        $db = Conexao::connect();
-
-        $sql = "SELECT * FROM personal";
-
-        $query = $db->prepare($sql);
-
-        $resultado = $query->execute();
-
-        $linhapersonal = $query->fetch();
-
-        echo $this->template->twig->render('pessoas/cadastrar.html.twig', compact('linhapersonal'));
     }
 
 
