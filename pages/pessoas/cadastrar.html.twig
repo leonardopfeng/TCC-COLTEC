@@ -87,9 +87,10 @@
                            <div id="cliente" style="display: none">
                                <div class="form-group">
                                    <label for="personal">Personal</label>
-                                   <select class="form-control" id="personal" name="personal" required>
+                                   <select class="form-control" id="personal" name="personal" placeholder="ID - NOME" required>
+                                       <option value="">- Selecione o personal -</option>
                                        {% for pessoa in linhapersonal %}
-                                           <option>{{ pessoa['pessoa'] }}</option>
+                                           <option value="{{ pessoa['pessoa'] }}">{{ pessoa['pessoa'] }} - {{ pessoa['nome'] }}</option>
                                        {% endfor %}
                                    </select>
                                </div>
@@ -102,7 +103,8 @@
 
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>
-                        /div>
+                        </div>
+
                     </form>
                 </div>
 
