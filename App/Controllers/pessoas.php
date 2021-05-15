@@ -160,8 +160,7 @@ class Pessoas Extends Controller
                         nome LIKE '%{$busca}%' OR
                         telefone LIKE '%{$busca}%' OR
                         usuario LIKE '%{$busca}%' OR
-                        tipo LIKE '%{$busca}%' OR
-                      
+                        tipo LIKE '%{$busca}%' 
                         ) ";
         }
 
