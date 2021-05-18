@@ -1,7 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-{% block title %}| Pessoas | Editar{% endblock %}
+{% block title %}| Exercícios | Editar{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
 {% endblock %}
@@ -11,13 +11,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Pessoa
+                    <h1>Exercícios
                         <small>Editar</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="breadcrumb-item active">Pessoa</li>
+                        <li class="breadcrumb-item active">Exercícios</li>
                     </ol>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                 <div class="card card-primary">
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form" action="/pessoas/salvareditar" method="post" class="jsonForm">
+                    <form role="form" action="/exercicios/salvareditar" method="post" class="jsonForm">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="id">Código</label>
@@ -49,33 +49,15 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="nome">Telefone</label>
-                                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required value="{{ linha['telefone'] }}"">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="tipo">Tipo</label>
-                                <select class="form-control" id="tipo" name="tipo" required value="{{ linha['tipo'] }}">
-                                    <option value="admin">Admin</option>
-                                    <option value="personal">Personal</option>
-                                    <option value="cliente">Cliente</option>
+                                <label for="categoria">Exercício</label>
+                                <select class="form-control" id="categoria" name="categoria">
+                                    <option value="">- Selecione a categoria -</option>
+                                    {% for categoria in linhacategoria %}
+                                        <option value="{{ categoria['id'] }}">{{ categoria['id'] }} - {{ categoria['nome'] }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                    <label for="usuario">Usuario</label>
-                                    <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" required value="{{ linha['usuario'] }}">
-                            </div>
-
-                            <div class="form-group">
-                                    <label for="senha">Senha</label>
-                                    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha"">
-                            </div>
-
-                            <div class="form-group">
-                                    <label for="confsenha">Confirmação da senha</label>
-                                    <input type="password" class="form-control" id="confsenha" name="confsenha" placeholder="Repita a senha">
-                            </div>
 
                         </div>
                         <!-- /.box-body -->
@@ -115,7 +97,7 @@
                         iziToast.success({
                             message: d.mensagem,
                             onClosed: function(){
-                                document.location = "/pessoas";
+                                document.location = "/exercicios";
                             }
                         });
 

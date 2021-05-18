@@ -36,7 +36,7 @@ class exercicios Extends Controller
     {
         $db = Conexao::connect();
 
-        $sql = "SELECT * FROM pessoas WHERE id=:id";
+        $sql = "SELECT * FROM exercicios WHERE id=:id";
 
         $query = $db->prepare($sql);
         $query->bindParam(":id", $id);
