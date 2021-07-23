@@ -19,17 +19,17 @@ class exercicios Extends Controller
     {
         $db = Conexao::connect();
 
-        $sql = "SELECT categoriaexercicio.id, categoriaexercicio.nome FROM categoriaexercicio";
+        $sql = "SELECT grupo_muscular.id, grupo_muscular.nome FROM grupo_muscular";
 
         $query = $db->prepare($sql);
 
 
         $query->execute();
 
-        $linhacategoria = $query->fetchAll();
+        $linhagrupomuscular = $query->fetchAll();
 
 
-        echo $this->template->twig->render('exercicios/cadastrar.html.twig', compact('linhacategoria'));
+        echo $this->template->twig->render('exercicios/cadastrar.html.twig', compact('linhagrupomuscular'));
     }
 
     public function formEditar($id)
@@ -55,10 +55,11 @@ class exercicios Extends Controller
 
         $db = Conexao::connect();
 
-        $sql = "INSERT INTO exercicios (nome, categoria) VALUES(:nome, :categoria)";
+        $sql = "INSERT INTO exercicios (nome_exercicio, grupo_muscular, url_video) VALUES(:nome_exercicio, :grupo_muscular, :url_video)";
         $query = $db->prepare($sql);
-        $query->bindParam(":nome", $_POST['nome']);
-        $query->bindParam(":categoria", $_POST['categoria']);
+        $query->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
+        $query->bindParam(":grupo_muscular", $_POST['grupo_muscular']);
+        $query->bindParam(":url_video", $_POST['url_video']);
         $query->execute();
 
         if ($query->rowCount()==1) {

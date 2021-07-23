@@ -4,7 +4,8 @@
         "php": ">=7.2",
         "twig/twig": "^3.0",
         "almasaeed2010/adminlte": "^3.0",
-        "dompdf/dompdf": "^0.8.6"
+        "dompdf/dompdf": "^0.8.6",
+        "igorescobar/jquery-mask-plugin": "^1.14"
     },
     "authors": [
         {
