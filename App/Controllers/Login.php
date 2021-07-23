@@ -6,7 +6,7 @@ use App\Controller;
 use App\Conexao;
 use App\Bootgrid;
 
-class Login Extends Controller
+class login Extends Controller
 {
     public function index()
     {
@@ -19,26 +19,27 @@ class Login Extends Controller
 
         $db = Conexao::connect();
 
-        $login = $_POST['login'];
+        $usuario = $_POST['usuario'];
         $senha = $_POST['senha'];
 
-        $sql = "SELECT * FROM usuario WHERE login=:login AND senha=:senha";
+        $senhacriptografada = $this->criptografa($senha);
+
+        $sql = "SELECT * FROM pessoas WHERE usuario=:usuario AND senha=:senha";
 
         $resultados = $db ->prepare($sql);
 
-        $resultados->bindParam(":login", $login);
-        $resultados->bindParam(":senha", $senha);
+        $resultados->bindParam(":usuario", $usuario);
+        $resultados->bindParam(":senha", $senhacriptografada);
         $resultados->execute();
 
         if($resultados->rowCount()==1){
-            $linha = $resultados->fetch();
+            $linha = $resultados->fetchObject();
 
-            $_SESSION['liberado'] = true;
-            $_SESSION['id'] = $linha->id; //Código da Pessoa que está logada
+            $_SESSION['logado'] = true;
+            $_SESSION['id'] = $linha->id;
             $this->retornaOK('Acesso autorizado.');
-
         }else{
-            $_SESSION['liberado'] = false;
+            $_SESSION['logado'] = false;
             $this->retornaErro('Usuário ou senha inválidos');
         }
     }
@@ -46,7 +47,7 @@ class Login Extends Controller
     public function sair()
     {
         session_start();
-        //unset($_SESSION['liberado']);
+        unset($_SESSION['logado']);
         session_destroy();
 
         header("Location: /login");
