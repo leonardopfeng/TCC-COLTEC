@@ -22,7 +22,7 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 {% endblock %}
 
@@ -63,7 +63,7 @@
         $(document).ready(function(){
             grid = $("#grid-data").bootgrid({
                 ajax: true,
-                url: "/categoriaexercicio/bootgrid",
+                url: "/grupo_muscular/bootgrid",
                 formatters: {
                     "commands": function(column, row)
                     {
@@ -75,7 +75,7 @@
             {
                 grid.find(".command-edit").on("click", function(e)
                 {
-                    document.location = '/categoriaexercicio/formeditar/' + $(this).data("row-id");
+                    document.location = '/gruo_muscular/formeditar/' + $(this).data("row-id");
                 }).end().find(".command-delete").on("click", function(e)
                 {
                     iziToastExcluir($(this).data("row-id"));
@@ -86,7 +86,7 @@
 
         function excluir(id){
             $.post(
-                "/categoriaexercicio/excluir",
+                "/grupo_muscular/excluir",
                 { id: id },
                 function( data ) {
                     if (data.status==0){

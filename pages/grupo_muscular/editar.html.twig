@@ -1,7 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-{% block title %}| Raça | Cadastrar{% endblock %}
+{% block title %}| Categoria Exercício | Editar{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
 {% endblock %}
@@ -11,13 +11,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Raça
-                        <small>Cadastrar</small></h1>
+                    <h1>Categoria Exercício
+                        <small>Editar</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="breadcrumb-item active">Raça</li>
+                        <li class="breadcrumb-item active">Categoria Exercício</li>
                     </ol>
                 </div>
             </div>
@@ -36,12 +36,19 @@
                 <div class="card card-primary">
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form" action="/raca/salvarcadastrar" method="post" class="jsonForm">
+                    <form role="form" action="/grupo_muscular/salvareditar" method="post" class="jsonForm">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome da raça" required>
+                                <label for="id">Código</label>
+                                <input type="number" class="form-control" id="id" name="id" readonly value="{{ linha['id'] }}">
                             </div>
+
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required value="{{ linha['nome'] }}">
+                            </div>
+
+
                         </div>
                         <!-- /.box-body -->
 
@@ -78,9 +85,12 @@
                         });
                     }else{
                         iziToast.success({
-                            message: d.mensagem
+                            message: d.mensagem,
+                            onClosed: function(){
+                                document.location = "/grupo_muscular";
+                            }
                         });
-                        $('.jsonForm').trigger("reset");
+
                     }
                 }
 
