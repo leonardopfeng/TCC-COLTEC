@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38065cc0feecc023e0914c88aabe8d2b",
+    "content-hash": "77a13b526526feac37dba241a35b281c",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -120,6 +120,48 @@
                 "source": "https://github.com/dompdf/dompdf/tree/master"
             },
             "time": "2020-08-30T22:54:22+00:00"
+        },
+        {
+            "name": "igorescobar/jquery-mask-plugin",
+            "version": "v1.14.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kamihouse/jQuery-Mask-Plugin.git",
+                "reference": "678a7df1f0bb275ce53f365b91af99d86850978d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kamihouse/jQuery-Mask-Plugin/zipball/678a7df1f0bb275ce53f365b91af99d86850978d",
+                "reference": "678a7df1f0bb275ce53f365b91af99d86850978d",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Igor Escobar",
+                    "email": "blog@igorescobar.com",
+                    "homepage": "https://about.me/igorescobar",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Thiago Pereira Rosa",
+                    "email": "thiagor@engineer.com",
+                    "homepage": "http://coderi.com.br",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "A jQuery Plugin to make masks on form fields and html elements.",
+            "homepage": "https://github.com/igorescobar/jQuery-Mask-Plugin",
+            "keywords": [
+                "jquery",
+                "mask",
+                "plugin"
+            ],
+            "time": "2016-04-27T16:16:55+00:00"
         },
         {
             "name": "phenx/php-font-lib",
@@ -318,20 +360,6 @@
             "support": {
                 "source": "https://github.com/symfony/polyfill-ctype/tree/v1.22.1"
             },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2021-01-07T16:49:33+00:00"
         },
         {
@@ -398,20 +426,6 @@
             "support": {
                 "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.22.1"
             },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2021-01-22T09:19:47+00:00"
         },
         {
@@ -478,16 +492,6 @@
                 "issues": "https://github.com/twigphp/Twig/issues",
                 "source": "https://github.com/twigphp/Twig/tree/v3.3.0"
             },
-            "funding": [
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/twig/twig",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2021-02-08T09:54:36+00:00"
         }
     ],
@@ -500,6 +504,5 @@
     "platform": {
         "php": ">=7.2"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "platform-dev": []
 }

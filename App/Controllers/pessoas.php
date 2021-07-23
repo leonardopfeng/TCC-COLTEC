@@ -6,7 +6,7 @@ namespace App\Controllers;
 use App\Controller;
 use App\Conexao;
 use App\Bootgrid;
-use App\ControllerSeguro;
+//use App\ControllerSeguro;
 
 class Pessoas Extends Controller
 {
@@ -19,14 +19,13 @@ class Pessoas Extends Controller
     {
         $db = Conexao::connect();
 
-        $sql = "SELECT * FROM personal";
+        $sql = "SELECT personal.pessoa, pessoas.id, pessoas.nome FROM personal INNER JOIN pessoas ON personal.pessoa=pessoas.id";
 
         $query = $db->prepare($sql);
 
         $query->execute();
 
         $linhapersonal = $query->fetchAll();
-        print_r($linhapersonal);
 
         echo $this->template->twig->render('pessoas/cadastrar.html.twig', compact('linhapersonal'));
     }
@@ -88,9 +87,10 @@ class Pessoas Extends Controller
 
             case 'cliente':
 
-                $sqlpessoa = "INSERT INTO clientes(pessoa) VALUES(:pessoa)";
+                $sqlpessoa = "INSERT INTO clientes(pessoa, personal) VALUES(:pessoa, :personal)";
                 $querypessoa = $db->prepare($sqlpessoa);
                 $querypessoa->bindValue(':pessoa', $db->lastInsertId());
+                $querypessoa->bindValue(':personal', $_POST['personal']);
                 $querypessoa->execute();
 
                 break;
@@ -160,8 +160,7 @@ class Pessoas Extends Controller
                         nome LIKE '%{$busca}%' OR
                         telefone LIKE '%{$busca}%' OR
                         usuario LIKE '%{$busca}%' OR
-                        tipo LIKE '%{$busca}%' OR
-                      
+                        tipo LIKE '%{$busca}%' 
                         ) ";
         }
 

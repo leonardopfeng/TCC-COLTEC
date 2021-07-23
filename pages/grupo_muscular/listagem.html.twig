@@ -1,7 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-{% block title %} | Raça | Listagem{% endblock %}
+{% block title %} | Categoria do Exercício | Listagem{% endblock %}
 {% block stylesheet %}
     <link href="/dist/js/jquery.bootgrid.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
@@ -12,17 +12,17 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Raça
+                    <h1>Categoria do Exercício
                         <small>Listagem</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="breadcrumb-item active">Raça</li>
+                        <li class="breadcrumb-item active">Categoria do Exercício</li>
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 {% endblock %}
 
@@ -63,7 +63,7 @@
         $(document).ready(function(){
             grid = $("#grid-data").bootgrid({
                 ajax: true,
-                url: "/raca/bootgrid",
+                url: "/grupo_muscular/bootgrid",
                 formatters: {
                     "commands": function(column, row)
                     {
@@ -75,7 +75,7 @@
             {
                 grid.find(".command-edit").on("click", function(e)
                 {
-                    document.location = '/raca/formeditar/' + $(this).data("row-id");
+                    document.location = '/gruo_muscular/formeditar/' + $(this).data("row-id");
                 }).end().find(".command-delete").on("click", function(e)
                 {
                     iziToastExcluir($(this).data("row-id"));
@@ -86,7 +86,7 @@
 
         function excluir(id){
             $.post(
-                "/raca/excluir",
+                "/grupo_muscular/excluir",
                 { id: id },
                 function( data ) {
                     if (data.status==0){

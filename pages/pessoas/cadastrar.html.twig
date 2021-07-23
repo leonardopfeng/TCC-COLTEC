@@ -38,45 +38,36 @@
                     <!-- form start -->
                     <form role="form" action="/pessoas/salvarcadastrar" method="post" class="jsonForm">
                         <div class="card-body">
+
                             <div class="form-group">
                                 <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
-                            </div>
+                                <input type="text" class="form-control margin mt-1 mb-1 " id="nome" name="nome" placeholder="Nome" required>
 
-                            <div class="form-group">
                                 <label for="telefone">Telefone</label>
-                                <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required>
-                            </div>
+                                <input type="tel" class="form-control margin mt-1 mb-1 " id="telefone" name="telefone" placeholder="Telefone" required>
 
-                            <div class="form-group">
                                 <label for="tipo">Tipo</label>
-                                <select class="form-control" id="tipo" name="tipo" required>
+                                <select class="form-control margin mt-1 mb-1 " id="tipo" name="tipo" required>
                                     <option value="">- Selecione -</option>
                                     <option value="admin">Admin</option>
                                     <option value="personal">Personal</option>
                                     <option value="cliente">Cliente</option>
                                 </select>
-                            </div>
 
-                            <div class="form-group">
                                 <label for="usuario">Usuario</label>
-                                <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" required>
-                            </div>
+                                <input type="text" class="form-control margin mt-1 mb-1 " id="usuario" name="usuario" placeholder="Usuario" required>
 
-                            <div class="form-group">
                                 <label for="senha">Senha</label>
-                                <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha" required>
-                            </div>
+                                <input type="password" class="form-control margin mt-1 mb-1 " id="senha" name="senha" placeholder="Senha" required>
 
-                            <div class="form-group">
                                 <label for="confsenha">Confirmação da senha</label>
-                                <input type="password" class="form-control" id="confsenha" name="confsenha" placeholder="Repita a senha" required>
+                                <input type="password" class="form-control margin mt-1 mb-1 " id="confsenha" name="confsenha" placeholder="Repita a senha" required>
                             </div>
 
                             <div id="personal" style="display: none">
-                                <div class="form-group">
+                                <div class="form-group margin mb-1 ">
                                     <label for="cref">CREF</label>
-                                    <input type="cref" class="form-control" id="cref" name="cref" placeholder="CREF" >
+                                    <input type="cref" class="form-control" id="cref" name="cref" placeholder="CREF" maxlength="11">
                                 </div>
                             </div>
 
@@ -85,11 +76,12 @@
                             </div>
 
                            <div id="cliente" style="display: none">
-                               <div class="form-group">
+                               <div class="form-group margin mb-1 ">
                                    <label for="personal">Personal</label>
-                                   <select class="form-control" id="personal" name="personal" required>
+                                   <select class="form-control" id="personal" name="personal" placeholder="ID - NOME">
+                                       <option value="">- Selecione o personal -</option>
                                        {% for pessoa in linhapersonal %}
-                                           <option>{{ pessoa['pessoa'] }}</option>
+                                           <option value="{{ pessoa['pessoa'] }}">{{ pessoa['pessoa'] }} - {{ pessoa['nome'] }}</option>
                                        {% endfor %}
                                    </select>
                                </div>
@@ -98,17 +90,18 @@
 
 
                         
-                        <!-- /.box-body -->
+
 
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>
-                        /div>
+                        </div>
+
                     </form>
                 </div>
 
             </div>
         </div>
-        <!-- /.row -->
+
     </section>
 
 {% endblock %}
@@ -152,6 +145,7 @@
                         $("#admin").hide();
                         $("#personal").show();
                         $("#cliente").hide();
+                        $("#cref").mask('000000-A/AA');
                         break;
                     case 'cliente':
                         $("#personal").hide();
@@ -165,6 +159,7 @@
                         break;
                 }
             });
+
         });
     </script>
 {% endblock %}

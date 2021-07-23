@@ -12,7 +12,6 @@ class ControllerSeguro extends Controller
             session_start();
         }
         if (!isset($_SESSION['logado']) || $_SESSION['logado'] != true) {
-            //\App\Controller::errorPermission();
             header("Location: /login");
         }
 

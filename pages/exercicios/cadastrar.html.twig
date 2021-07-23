@@ -1,8 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-
-{% block title %}| Categoria do Exercício | Cadastrar{% endblock %}
+{% block title %}| Exercicios | Cadastrar{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
 {% endblock %}
@@ -12,13 +11,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Categoria do Exercício
+                    <h1>Exercicios
                         <small>Cadastrar</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="breadcrumb-item active">Categoria do Exercício</li>
+                        <li class="breadcrumb-item active">Exercicios</li>
                     </ol>
                 </div>
             </div>
@@ -37,20 +36,35 @@
                 <div class="card card-primary">
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form role="form" action="/categoriaexercicio/salvarcadastrar" method="post" class="jsonForm">
+                    <form role="form" action="/exercicios/salvarcadastrar" method="post" class="jsonForm">
                         <div class="card-body">
-
                             <div class="form-group">
-                                <label for="nome">Nome da categoria</label>
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="nome" required>
+
+                                <label for="nome_exercicio">Nome</label>
+                                <input type="text" class="form-control margin mt-1 mb-1 " id="nome_exercicio" name="nome_exercicio" placeholder="Nome" required>
+
+                                <label for="grupo_muscular">Grupo muscular</label>
+                                <select class="form-control margin mt-1 mb-1 " id="grupo_muscular" name="grupo_muscular" required>
+                                    <option value="">- Selecione o grupo muscular -</option>
+                                    {% for grupo in linhagrupomuscular %}
+                                        <option value="{{ grupo['id'] }}">{{ grupo['id'] }} - {{ grupo['nome'] }}</option>
+                                    {% endfor %}
+                                </select>
+
+                                <label for="url_video">URL do vídeo</label>
+                                <input type="text" class="form-control margin mt-1 mb-1 " id="url_video" name="url_video" placeholder="Nome" required>
+
                             </div>
 
+
                         </div>
+
                         <!-- /.box-body -->
 
                         <div class="card-footer">
                             <button type="submit" class="btn btn-primary">Salvar</button>
                         </div>
+
                     </form>
                 </div>
 
@@ -87,6 +101,31 @@
                     }
                 }
 
+            });
+
+            $("#tipo").on("change", function (){
+                switch ($(this).val()){
+                    case 'admin':
+                        $("#admin").show();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                    case 'personal':
+                        $("#admin").hide();
+                        $("#personal").show();
+                        $("#cliente").hide();
+                        break;
+                    case 'cliente':
+                        $("#personal").hide();
+                        $("#cliente").show();
+                        $("#admin").hide();
+                        break;
+                    case '':
+                        $("#admin").hide();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                }
             });
         });
     </script>
