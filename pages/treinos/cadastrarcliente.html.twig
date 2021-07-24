@@ -1,0 +1,100 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+
+
+{% block title %}| Treinos | Cadastrar{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/dist/css/iziToast.min.css">
+{% endblock %}
+
+{% block breadcrumb %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Treinos
+                        <small>Cadastrar</small></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i>Home</a></li>
+                        <li class="breadcrumb-item active">Treinos</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block content %}
+    <section class="content">
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card card-primary">
+
+                    <form role="form" action="/treinos/formcadastrartreino" method="post" class="jsonForm">
+                        <div class="card-body">
+                            <div class="form-group">
+
+                                <label for="cliente">Cliente</label>
+                                <select class="form-control" id="cliente" name="cliente" placeholder="ID - NOME">
+                                    <option value="">- Selecione o cliente -</option>
+                                    {% for cliente in linha %}
+                                        <option value="{{ pessoa['pessoa'] }}">{{ pessoa['pessoa'] }} - {{ pessoa['nome'] }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Avançar</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+
+
+
+{% block javascriptPlugins %}
+    <script src="/dist/js/jquery.form.js"></script>
+    <script src="/dist/js/iziToast.min.js"></script>
+{% endblock %}
+
+{% block jquery %}
+    <script>
+        $(document).ready(function(){
+            $('.jsonForm').ajaxForm({
+                dataType:  'json',
+
+                success:   function(d){
+                    if (d.status==0){
+                        iziToast.error({
+                            message: d.mensagem
+                        });
+                    }else{
+                        iziToast.success({
+                            message: d.mensagem
+                        });
+                        $('.jsonForm').trigger("reset");
+                    }
+                }
+
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}
