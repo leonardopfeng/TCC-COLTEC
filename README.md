@@ -1,1 +1,1 @@
-# TCC-COLTEC
+Projeto de desenvolvimento de um Sistema Web na linguagem PHP visando o gerenciamento de dados cruciais para o funcionamento de uma academia, sendo estes relacionados aos pagamentos, controle de clientes e treinos.
