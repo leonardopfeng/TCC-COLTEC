@@ -18,4 +18,9 @@ class ControllerSeguro extends Controller
         $this->template->twig->addGlobal('session', $_SESSION);
     }
 
+    /*public function checarPermissao()
+    {
+        if ($this->nivel)
+    }*/
+
 }

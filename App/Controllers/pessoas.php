@@ -6,10 +6,11 @@ namespace App\Controllers;
 use App\Controller;
 use App\Conexao;
 use App\Bootgrid;
-//use App\ControllerSeguro;
+use App\ControllerSeguro;
 
-class Pessoas Extends Controller
+class Pessoas Extends ControllerSeguro
 {
+
     public function index()
     {
         echo $this->template->twig->render('pessoas/listagem.html.twig');

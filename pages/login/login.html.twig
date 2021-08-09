@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/dist/css/iziToast.min.css">
+
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -24,7 +26,7 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">Logue para iniciar sua sessão</p>
 
-            <form action="/login/verificar" method="post">
+            <form action="/login/verificar" method="post" class="jsonForm">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuário">
                         <div class="input-group-append">
@@ -57,5 +59,34 @@
 <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/dist/js/adminlte.min.js"></script>
+
+<script src="/dist/js/jquery.form.js"></script>
+<script src="/dist/js/iziToast.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.jsonForm').ajaxForm({
+            dataType: 'json',
+            timeout: 2000,
+
+            success: function (d) {
+                if (d.status == 0) {
+                    iziToast.error({
+                        message: d.mensagem
+                    });
+                } else {
+                    iziToast.success({
+                        message: d.mensagem,
+                        
+                    });
+                    document.location = "/pessoas";
+
+                }
+            }
+
+        });
+    });
+</script>
+
 </body>
 </html>
