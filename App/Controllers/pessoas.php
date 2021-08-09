@@ -47,10 +47,6 @@ class Pessoas Extends ControllerSeguro
         echo $this->template->twig->render('pessoas/editar.html.twig', compact('linha'));
     }
 
-    public function buscaPessoa()
-    {
-    }
-
 
     public function salvarCadastrar()
     {
