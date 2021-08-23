@@ -1,0 +1,5 @@
+npm config set proxy "10.1.1.254:3128"
+npm config set https-proxy "10.1.1.254:3128"
+
+<!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
