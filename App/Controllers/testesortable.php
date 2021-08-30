@@ -17,7 +17,17 @@ class testesortable Extends Controller
 
     public function formCadastrar()
     {
-        echo $this->template->twig->render('testesortable/cadastrar.html.twig');
+        $db = Conexao::connect();
+
+        $sql_grupomuscular = "SELECT id, nome FROM grupo_muscular";
+
+        $query_grupomuscular = $db->prepare($sql_grupomuscular);
+
+        $query_grupomuscular->execute();
+
+        $grupomuscular = $query_grupomuscular->fetchAll();
+
+        echo $this->template->twig->render('testesortable/cadastrar.html.twig', compact('grupomuscular'));
     }
 
     public function formEditar($id)
