@@ -29,7 +29,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-                        <li class="breadcrumb-item active">Treino {{ grupomuscular }}</li>
+                        <li class="breadcrumb-item active">Treino</li>
                     </ol>
                 </div>
             </div>
@@ -39,6 +39,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="d-flex">
     <div class="list-group col-5" id="listaEsquerda">
         <div class="list-group-item">Item 1.1 1</div>
@@ -48,16 +49,26 @@
         <div class="list-group-item">Item 1.5</div>
     </div>
 
-    <div class="list-group col-7" id="listaDireita">
-        <script>
+    <div class="list-group col-7">
+        {% for grupo in grupomuscular %}
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            {{ grupo.nome }}
+                        </button>
+                    </h5>
+                </div>
 
-
-
-            for (var grupo in a  ){
-                $("#listaDireita").append('<div class="post-id-' + grupo.id + '"><h4 id="nome">' + grupo.nome);
-            }
-
-        </script>
+                <div id="listaDireita" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    {% for exercicio in grupomuscular %}
+                    <div class="list-group-item">
+                        {{ grupo.nome_exercicio }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>
 
@@ -76,7 +87,7 @@
                 put: false // Do not allow items to be put into this list
             },
             animation: 150,
-            sort: false // To disable sorting: set sort to false
+            sort: true // To disable sorting: set sort to false
         });
 
         new Sortable(listaEsquerda, {

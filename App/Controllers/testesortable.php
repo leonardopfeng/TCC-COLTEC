@@ -19,13 +19,31 @@ class testesortable Extends Controller
     {
         $db = Conexao::connect();
 
-        $sql_grupomuscular = "SELECT id, nome FROM grupo_muscular";
+      /*  $sql_grupomuscular = "SELECT id, nome FROM grupo_muscular";
+
+      $sql_grupomuscular = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome FROM grupo_muscular INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular;";
 
         $query_grupomuscular = $db->prepare($sql_grupomuscular);
 
         $query_grupomuscular->execute();
 
         $grupomuscular = $query_grupomuscular->fetchAll();
+
+        print_r($grupomuscular);*/
+
+        $sql_grupomuscular = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome 
+                              FROM grupo_muscular 
+                              INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular";
+
+        $query_grupomuscular = $db->prepare($sql_grupomuscular);
+
+        $query_grupomuscular->execute();
+
+        $grupomuscular = $query_grupomuscular->fetchAll();
+
+        print_r($grupomuscular);
+
+
 
         echo $this->template->twig->render('testesortable/cadastrar.html.twig', compact('grupomuscular'));
     }
