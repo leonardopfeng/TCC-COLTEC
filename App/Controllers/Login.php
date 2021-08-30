@@ -10,6 +10,12 @@ class login Extends Controller
 {
     public function index()
     {
+        session_start();
+        if(isset($_SESSION['logado']) && $_SESSION['logado']){
+            header("location: /pessoas");
+            exit;
+        }
+
         echo $this->template->twig->render('login/login.html.twig');
     }
 
@@ -37,6 +43,7 @@ class login Extends Controller
 
             $_SESSION['logado'] = true;
             $_SESSION['id'] = $linha->id;
+            $_SESSION['tipo'] = $linha->tipo;
             $this->retornaOK('Acesso autorizado.');
         }else{
             $_SESSION['logado'] = false;

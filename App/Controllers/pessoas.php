@@ -6,10 +6,11 @@ namespace App\Controllers;
 use App\Controller;
 use App\Conexao;
 use App\Bootgrid;
-//use App\ControllerSeguro;
+use App\ControllerSeguro;
 
-class Pessoas Extends Controller
+class Pessoas Extends ControllerSeguro
 {
+
     public function index()
     {
         echo $this->template->twig->render('pessoas/listagem.html.twig');
@@ -44,10 +45,6 @@ class Pessoas Extends Controller
         $linha = $query->fetch();
 
         echo $this->template->twig->render('pessoas/editar.html.twig', compact('linha'));
-    }
-
-    public function buscaPessoa()
-    {
     }
 
 
