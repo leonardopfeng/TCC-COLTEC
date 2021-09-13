@@ -41,6 +41,7 @@
 {% block content %}
 
 <div class="d-flex">
+
     <div class="list-group col-5" id="listaEsquerda">
         <div class="list-group-item">Item 1.1 1</div>
         <div class="list-group-item">Item 1.2</div>
@@ -49,54 +50,72 @@
         <div class="list-group-item">Item 1.5</div>
     </div>
 
-    <div class="list-group col-7">
-        {% for grupo in grupomuscular %}
+
+    <div class="list-group col-7 listaDireita" id="accordion">
+        {% set i = 0 %}
+        {%  for grupo in grupomuscular  %}
             <div class="card">
-                <div class="card-header" id="headingOne">
+                <div class="card-header" id="heading{{ i }}">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
                             {{ grupo.nome }}
                         </button>
                     </h5>
                 </div>
-                <div>
-
-                <div id="listaDireita" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    {% for exercicios in grupo.exercicios %}
-                        <div class="list-group-item">
-                            {{ exercicios.nome_exercicio }}
-                         </div>
-                   {%  endfor %}
-                </div>
-
+                <div id="collapse{{ i }}" class="collapse " aria-labelledby="heading{{ i }}" data-parent="#accordion">
+                    <div class="list-group ">
+                        {% for exercicios in grupo.exercicios %}
+                            <div class="list-group-item">
+                                {{ exercicios.nome_exercicio }}
+                             </div>
+                       {%  endfor %}
+                    </div>
                 </div>
             </div>
+        {% set i = i + 1 %}
         {% endfor %}
-        </div>
     </div>
+</div>
+
+
+
+
+
 
 {% endblock %}
 
 
 
 {% block javascriptPlugins %}
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.js"></script>
+    <script type="text/javascript" src="/dist/js/jquery.form.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script type="text/javascript">
-        new Sortable(listaDireita, {
+        new Sortable(listaEsquerda, {
+            group: 'shared',
+            animation: 150,
+            sort: true // To disable sorting: set sort to false
+        });
+        $(".listaDireita .list-group").each(function(item) {
+            $el = $(this)
+            console.log($el.__proto__);
+            new Sortable( $(this) , {
+                group: {
+                    name: 'shared',
+                    pull: 'clone',
+                    put: false // Do not allow items to be put into this list
+                },
+                animation: 150
+            });
+        });
+/*        new Sortable(listaDireita, {
             group: {
                 name: 'shared',
                 pull: 'clone',
                 put: false // Do not allow items to be put into this list
             },
-            animation: 150,
-            sort: false // To disable sorting: set sort to false
-        });
-
-        new Sortable(listaEsquerda, {
-            group: 'shared',
             animation: 150
-        });
+        });*/
     </script>
 
 {% endblock %}
