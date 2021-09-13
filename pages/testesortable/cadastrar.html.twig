@@ -59,18 +59,21 @@
                         </button>
                     </h5>
                 </div>
+                <div>
 
                 <div id="listaDireita" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    {% for exercicio in grupomuscular %}
-                    <div class="list-group-item">
-                        {{ grupo.nome_exercicio }}
-                    </div>
-                    {% endfor %}
+                    {% for exercicios in grupo.exercicios %}
+                        <div class="list-group-item">
+                            {{ exercicios.nome_exercicio }}
+                         </div>
+                   {%  endfor %}
+                </div>
+
                 </div>
             </div>
         {% endfor %}
+        </div>
     </div>
-</div>
 
 {% endblock %}
 
@@ -87,7 +90,7 @@
                 put: false // Do not allow items to be put into this list
             },
             animation: 150,
-            sort: true // To disable sorting: set sort to false
+            sort: false // To disable sorting: set sort to false
         });
 
         new Sortable(listaEsquerda, {

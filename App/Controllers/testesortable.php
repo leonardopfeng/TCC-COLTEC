@@ -31,17 +31,33 @@ class testesortable Extends Controller
 
         print_r($grupomuscular);*/
 
-        $sql_grupomuscular = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome 
+
+
+       /* $sql_aaaa = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome
                               FROM grupo_muscular 
-                              INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular";
+                              INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular";*/
+
+
+
+        $sql_grupomuscular = "SELECT * FROM grupo_muscular ORDER by nome";
 
         $query_grupomuscular = $db->prepare($sql_grupomuscular);
 
         $query_grupomuscular->execute();
+        $i=0;
+        while ($linhaGrupo =  $query_grupomuscular->fetchObject()){
+            $sql_exercicios = "SELECT * FROM exercicios where grupo_muscular={$linhaGrupo->id}";
+            $query_exercicios = $db->query($sql_exercicios);
+            $grupomuscular[$i] = $linhaGrupo;
+            $grupomuscular[$i]->exercicios = $query_exercicios->fetchAll(\PDO::FETCH_OBJ);
+            $i++;
+        };
+//        echo '<pre>';
+//
+//        print_r($grupomuscular);
+//
+//        exit;
 
-        $grupomuscular = $query_grupomuscular->fetchAll();
-
-        print_r($grupomuscular);
 
 
 

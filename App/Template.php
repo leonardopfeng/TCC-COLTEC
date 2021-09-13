@@ -13,7 +13,10 @@ class Template
     {
         $this->loader = new \Twig\Loader\FilesystemLoader(VIEWPATH);
         $this->twig = new \Twig\Environment($this->loader, [
+            'debug' => true,
             //'cache' => VIEWCACHE,
         ]);
+
+        $this->twig->addExtension(new \Twig\Extension\DebugExtension());
     }
 }
