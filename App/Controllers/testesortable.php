@@ -83,6 +83,13 @@ class testesortable Extends Controller
 
     public function salvarCadastrar()
     {
+        for($i=0; $i<count($_POST['id_exercicio']); $i++){
+            echo $_POST['id_exercicio'][$i];
+            echo $_POST['serie'][$i];
+            echo $_POST['carga'][$i];
+            echo $_POST['repeticao'][$i];
+        }
+        exit;
         $db = Conexao::connect();
 
         $sql = "INSERT INTO grupo_muscular (nome) VALUES(:nome)";

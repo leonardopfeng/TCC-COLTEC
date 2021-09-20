@@ -41,14 +41,12 @@
 {% block content %}
 
 <div class="d-flex">
+    <form action="/testesortable/salvarCadastrar" method="post" class="col-5">
+        <div class="list-group col" id="listaEsquerda">
 
-    <div class="list-group col-5" id="listaEsquerda">
-        <div class="list-group-item">Item 1.1 1</div>
-        <div class="list-group-item">Item 1.2</div>
-        <div class="list-group-item">Item 1.3</div>
-        <div class="list-group-item">Item 1.4</div>
-        <div class="list-group-item">Item 1.5</div>
-    </div>
+        </div>
+        <button type="submit">Salvar</button>
+    </form>
 
 
     <div class="list-group col-7 listaDireita" id="accordion">
@@ -57,7 +55,7 @@
             <div class="card">
                 <div class="card-header" id="heading{{ i }}">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
+                        <button class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
                             {{ grupo.nome }}
                         </button>
                     </h5>
@@ -67,6 +65,14 @@
                         {% for exercicios in grupo.exercicios %}
                             <div class="list-group-item">
                                 {{ exercicios.nome_exercicio }}
+                                {%  if ( exercicios.id_exercicio==7 ) %}
+                                    <input type="number" name="serie[]" min="1" >
+                                {% else %}
+                                    <input type="number" name="serie[]" hidden value="0" >
+                                {% endif %}
+                                <input type="number" name="carga[]" min="1">
+                                <input type="number" name="repeticao[]" min="1">
+                                <input type="hidden1" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}">
                              </div>
                        {%  endfor %}
                     </div>
@@ -81,6 +87,18 @@
 
 
 
+    <style>
+        .listaDireita input {
+            display: none;
+        }
+        #listaEsquerda {
+            min-height: 400px;
+        }
+        #listaEsquerda .list-group-item {
+            border: 1px solid red;
+            margin: 3px;
+        }
+    </style>
 
 {% endblock %}
 
@@ -98,8 +116,7 @@
         });
         $(".listaDireita .list-group").each(function(item) {
             $el = $(this)
-            console.log($el.__proto__);
-            new Sortable( $(this) , {
+            new Sortable( $el[0] , {
                 group: {
                     name: 'shared',
                     pull: 'clone',

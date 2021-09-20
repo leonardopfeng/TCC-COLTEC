@@ -109,7 +109,7 @@ class exercicios Extends Controller
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT exercicios.id_exercicio, exercicios.nome_exercicio, grupo_muscular.nome as nomecategoria FROM exercicios INNER JOIN grupo_muscular ON exercicios.grupo_muscular=grupo_muscular.id";
+        $sql = "SELECT exercicios.url_video, exercicios.id_exercicio, exercicios.nome_exercicio, grupo_muscular.nome as nomecategoria FROM exercicios INNER JOIN grupo_muscular ON exercicios.grupo_muscular=grupo_muscular.id";
 
 
 
@@ -117,7 +117,8 @@ class exercicios Extends Controller
             $sql .= " and (
                         id_exercicio LIKE '%{$busca}%' OR
                         nome_exercicio LIKE '%{$busca}%' OR
-                        nomecategoria LIKE '%{$busca}%' 
+                        nomecategoria LIKE '%{$busca}%' OR
+                        url_video LIKE '%{$busca}%'
                         ) ";
         }
 
