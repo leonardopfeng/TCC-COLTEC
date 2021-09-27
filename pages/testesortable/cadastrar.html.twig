@@ -45,7 +45,8 @@
         <div class="list-group col" id="listaEsquerda">
 
         </div>
-        <button type="submit">Salvar</button>
+        <button type="submit" class="btn btn-success">Salvar</button>
+        ID PESSOA <input type="text" name="id_pessoa" value="1">
     </form>
 
 
@@ -66,12 +67,12 @@
                             <div class="list-group-item">
                                 {{ exercicios.nome_exercicio }}
                                 {%  if ( exercicios.id_exercicio==7 ) %}
-                                    <input type="number" name="serie[]" min="1" >
+                                    <input type="number" name="serie[]" min="1" placeholder="Série" required >
                                 {% else %}
-                                    <input type="number" name="serie[]" hidden value="0" >
+                                    <input type="number" name="serie[]" hidden value="0" placeholder="Série"  >
                                 {% endif %}
-                                <input type="number" name="carga[]" min="1">
-                                <input type="number" name="repeticao[]" min="1">
+                                <input type="number" name="carga[]" min="1" placeholder="Carga" required >
+                                <input type="number" name="repeticao[]" min="1" placeholder="Repetições" required >
                                 <input type="hidden1" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}">
                              </div>
                        {%  endfor %}
@@ -95,7 +96,8 @@
             min-height: 400px;
         }
         #listaEsquerda .list-group-item {
-            border: 1px solid red;
+            border: 1px solid black;
+            border-radius: 4px 4px;
             margin: 3px;
         }
     </style>

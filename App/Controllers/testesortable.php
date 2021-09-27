@@ -83,22 +83,27 @@ class testesortable Extends Controller
 
     public function salvarCadastrar()
     {
-        for($i=0; $i<count($_POST['id_exercicio']); $i++){
-            echo $_POST['id_exercicio'][$i];
-            echo $_POST['serie'][$i];
-            echo $_POST['carga'][$i];
-            echo $_POST['repeticao'][$i];
-        }
-        exit;
         $db = Conexao::connect();
+        $query = $db->query("INSERT INTO treinos (clientes_pessoa, personal_pessoa) VALUES ('1', '1') ");
 
-        $sql = "INSERT INTO grupo_muscular (nome) VALUES(:nome)";
-        $query = $db->prepare($sql);
-        $query->bindParam(":nome", $_POST['nome']);
-        $query->execute();
 
-        if ($query->rowCount()==1) {
-            $this->retornaOK('O grupo muscular foi cadastrado com sucesso');
+       //Puxar o ultimo treino inserido
+
+        $id_treino = $db->lastInsertId();
+
+        for($ordem=1; $ordem<=count($_POST['id_exercicio']); $ordem++){
+            //checar se já não foi inserido o exercício no treino
+
+            $sql = "INSERT INTO exercicios_treino(id_treino, id_exercicio, serie, repeticao, carga, ordem) VALUES(:id_treino, :id_exercicio, :serie, :repeticao, :carga, :ordem)";
+            $query = $db->prepare($sql);
+            $query->bindParam(":id_treino",$id_treino);
+            $query->bindParam(":id_exercicio",$_POST['id_exercicio'][$i]);
+            $query->bindParam(":serie",$_POST['serie'][$i]);
+            $query->bindParam(":carga",$_POST['carga'][$i]);
+            $query->bindParam(":repeticao",$_POST['repeticao'][$i]);
+            $query->bindParam(":ordem",$ordem);
+            $query->execute();
+
         }
 
     }
