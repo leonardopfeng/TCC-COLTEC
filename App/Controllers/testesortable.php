@@ -3,13 +3,21 @@
 
 namespace App\Controllers;
 
-use App\Controller;
 use App\Conexao;
 use App\Bootgrid;
 use App\ControllerSeguro;
 
-class testesortable Extends Controller
+class testesortable Extends ControllerSeguro
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+//        if ($_SESSION['tipo']!='personal'){
+//            $this->errorPermission();
+//        }
+    }
+
     public function index()
     {
         echo $this->template->twig->render('grupo_muscular/listagem.html.twig');
@@ -34,7 +42,7 @@ class testesortable Extends Controller
 
 
        /* $sql_aaaa = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome
-                              FROM grupo_muscular 
+                              FROM grupo_muscular
                               INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular";*/
 
 
@@ -52,16 +60,19 @@ class testesortable Extends Controller
             $grupomuscular[$i]->exercicios = $query_exercicios->fetchAll(\PDO::FETCH_OBJ);
             $i++;
         };
-//        echo '<pre>';
-//
-//        print_r($grupomuscular);
-//
-//        exit;
+
+
+
+        $sqlCliente = "SELECT clientes.pessoa, pessoas.id, pessoas.nome FROM clientes INNER JOIN pessoas ON clientes.pessoa=pessoas.id";
+        $query = $db->prepare($sqlCliente);
+        $query->execute();
+
+        $Clientes = $query->fetchAll();
 
 
 
 
-        echo $this->template->twig->render('testesortable/cadastrar.html.twig', compact('grupomuscular'));
+        echo $this->template->twig->render('testesortable/cadastrar.html.twig', compact('grupomuscular','Clientes'));
     }
 
     public function formEditar($id)
@@ -83,28 +94,46 @@ class testesortable Extends Controller
 
     public function salvarCadastrar()
     {
-        $db = Conexao::connect();
-        $query = $db->query("INSERT INTO treinos (clientes_pessoa, personal_pessoa) VALUES ('1', '1') ");
+        try {
 
+            $cliente = $_POST['clientes'];
 
-       //Puxar o ultimo treino inserido
-
-        $id_treino = $db->lastInsertId();
-
-        for($ordem=1; $ordem<=count($_POST['id_exercicio']); $ordem++){
-            //checar se já não foi inserido o exercício no treino
-
-            $sql = "INSERT INTO exercicios_treino(id_treino, id_exercicio, serie, repeticao, carga, ordem) VALUES(:id_treino, :id_exercicio, :serie, :repeticao, :carga, :ordem)";
-            $query = $db->prepare($sql);
-            $query->bindParam(":id_treino",$id_treino);
-            $query->bindParam(":id_exercicio",$_POST['id_exercicio'][$i]);
-            $query->bindParam(":serie",$_POST['serie'][$i]);
-            $query->bindParam(":carga",$_POST['carga'][$i]);
-            $query->bindParam(":repeticao",$_POST['repeticao'][$i]);
-            $query->bindParam(":ordem",$ordem);
+            $db = Conexao::connect();
+            $db->beginTransaction();
+            $query = $db->prepare("INSERT INTO treinos (clientes_pessoa, personal_pessoa, status) VALUES (:clientes, :personal, 'ativo') ");
+            $query->bindParam(':clientes', $cliente);
+            $query->bindParam(':personal', $_SESSION['id']);
             $query->execute();
 
+
+           //Puxar o ultimo treino inserido
+
+            $id_treino = $db->lastInsertId();
+
+            for($ordem=0; $ordem<count($_POST['id_exercicio']); $ordem++){
+                //checar se já não foi inserido o exercício no treino
+
+                $sql = "INSERT INTO exercicios_treino(id_treino, id_exercicio, serie, repeticao, carga, ordem) VALUES(:id_treino, :id_exercicio, :serie, :repeticao, :carga, :ordem)";
+                $query = $db->prepare($sql);
+                $query->bindParam(":id_treino",$id_treino);
+                $query->bindParam(":id_exercicio",$_POST['id_exercicio'][$ordem]);
+                $query->bindParam(":serie",$_POST['serie'][$ordem]);
+                $query->bindParam(":carga",$_POST['carga'][$ordem]);
+                $query->bindParam(":repeticao",$_POST['repeticao'][$ordem]);
+                $query->bindValue(":ordem",($ordem+1));
+                $query->execute();
+
+            }
+            $db->commit();
+
+           header('Location: /exercicios');
+
+        }catch(\Exception $error){
+            $db->rollBack();
+            echo 'Erro ao inserir';
         }
+
+
 
     }
 
