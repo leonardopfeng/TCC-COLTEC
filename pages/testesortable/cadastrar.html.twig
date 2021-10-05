@@ -93,7 +93,7 @@
                                 {% endif %}
                                 <input type="number" name="carga[]" min="1" placeholder="Carga" required >
                                 <input type="number" name="repeticao[]" min="1" placeholder="Repetições" required >
-                                <input type="hidden1" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}">
+                                <input type="hidden1" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}" readonly>
                              </div>
                        {%  endfor %}
                     </div>

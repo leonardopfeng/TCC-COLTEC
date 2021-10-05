@@ -90,6 +90,7 @@ class exercicios Extends Controller
     }
 
     public function excluir(){
+
         $db = Conexao::connect();
 
         $sql = "DELETE FROM exercicios WHERE id=:id";
@@ -103,6 +104,7 @@ class exercicios Extends Controller
         }else{
             $this->retornaErro('Erro ao excluir os dados');
         }
+
     }
 
 
