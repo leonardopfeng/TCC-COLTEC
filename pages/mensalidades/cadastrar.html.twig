@@ -47,6 +47,9 @@
                                 <label for="desconto">Desconto</label>
                                 <input type="number" class="form-control margin mt-1 mb-1 " id="desconto" name="desconto" placeholder="Desconto" min="0" step="0.1">
 
+                                <label for="total"> Total </label>
+                                <input type="number" class="form-control margin mt-1 mb-1" placeholder="Total" id="total" value="" readonly>
+
                                 <div class="form-group margin mb-1 ">
                                     <label for="cliente">Cliente</label>
                                     <select class="form-control" id="cliente" name="cliente" placeholder="ID - NOME">
@@ -85,6 +88,13 @@
 {% block javascriptPlugins %}
     <script src="/dist/js/jquery.form.js"></script>
     <script src="/dist/js/iziToast.min.js"></script>
+
+    <script type="text/javascript">
+        $("#valor, #desconto").on("change", function (){
+            let valorFinal = $('#valor').val() -  $('#desconto').val();
+            document.getElementById("total").setAttribute('value', valorFinal);
+        });
+    </script>
 {% endblock %}
 
 {% block jquery %}

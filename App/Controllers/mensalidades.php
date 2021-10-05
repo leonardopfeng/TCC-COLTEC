@@ -50,6 +50,8 @@ class mensalidades Extends Controller
     public function salvarCadastrar()
     {
 
+
+
         $total = $_POST['valor'] - $_POST['desconto'];
         print_r($total);
 
@@ -57,7 +59,7 @@ class mensalidades Extends Controller
 
         if($_POST['desconto']<$_POST['valor']) {
 
-            $sql = "INSERT INTO mensalidades (cliente, valor, desconto, total, data_pagamento) VALUES(:cliente, :valor, :desconto, :total, NOW())";
+            $sql = "INSERT INTO mensalidades (cliente, valor, desconto, total, data_pagamento, data_vencimento) VALUES(:cliente, :valor, :desconto, :total, NOW(), DATE_ADD(NOW(), INTERVAL 1 MONTH))";
             $query = $db->prepare($sql);
             $query->bindParam(":cliente", $_POST['cliente']);
             $query->bindParam(":valor", $_POST['valor']);
@@ -118,12 +120,20 @@ class mensalidades Extends Controller
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT `id`, `nome` FROM grupo_muscular WHERE 1 ";
+        $sql = "SELECT mensalidades.id, mensalidades.cliente, mensalidades.total,
+                       mensalidades.data_pagamento, mensalidades.data_vencimento,
+                       pessoas.nome
+                FROM mensalidades 
+                INNER JOIN pessoas ON pessoas.id = mensalidades.cliente                
+                WHERE 1 ";
 
         if ($busca!=''){
             $sql .= " and (
                             id LIKE '%{$busca}%' OR
-                            nome LIKE '%{$busca}%'
+                            nome LIKE '%{$busca}%' OR
+                            total LIKE '%{$busca}%' OR
+                            data_pagamento LIKE '%{$busca}%' OR
+                            data_vencimento LIKE '%{$busca}%'
                             ) ";
         }
 
