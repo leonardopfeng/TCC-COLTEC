@@ -123,10 +123,16 @@ class testesortable Extends ControllerSeguro
                 $query->bindValue(":ordem",($ordem+1));
                 $query->execute();
 
+
             }
             $db->commit();
-
-           header('Location: /exercicios');
+            if($query->rowCount()==1){
+                $this->retornaOK('Treino cadastrado com sucesso');
+                header('Location: /exercicios');
+            }
+            else{
+                $this->retornaErro('Erro ao cadastrar treino');
+            }
 
         }catch(\Exception $error){
             $db->rollBack();
