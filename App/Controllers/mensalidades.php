@@ -51,11 +51,9 @@ class mensalidades Extends Controller
     {
 
 
+        $db = Conexao::connect();
 
         $total = $_POST['valor'] - $_POST['desconto'];
-        print_r($total);
-
-        $db = Conexao::connect();
 
         if($_POST['desconto']<$_POST['valor']) {
 
@@ -69,6 +67,9 @@ class mensalidades Extends Controller
 
             if ($query->rowCount() == 1) {
                 $this->retornaOK('A respectiva mensalidade foi cadastrada com sucesso');
+            }
+            else{
+                $this->retornaErro('Erro ao cadastrar a mensalidade');
             }
 
         }else{
