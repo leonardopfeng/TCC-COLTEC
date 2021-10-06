@@ -103,7 +103,7 @@ class mensalidades Extends Controller
     public function excluir(){
         $db = Conexao::connect();
 
-        $sql = "DELETE FROM grupo_muscular WHERE id=:id";
+        $sql = "DELETE FROM mensalidades WHERE id=:id";
 
         $query = $db->prepare($sql);
         $query->bindParam(":id", $_POST['id']);
