@@ -51,6 +51,7 @@ class Pessoas Extends ControllerSeguro
     public function salvarCadastrar()
     {
 
+        //ve se as senhas estao iguais
         if($_POST['senha']!=$_POST['confsenha']){
             $this->retornaErro('As senhas não estão iguais');
         }
@@ -59,6 +60,16 @@ class Pessoas Extends ControllerSeguro
 
 
         $db = Conexao::connect();
+
+        // ve se já nao tem usuario cadastrado com esse login
+        $sqlUsuario = "SELECT * FROM pessoas WHERE usuario=:usuario";
+        $queryUsuario = $db->prepare($sqlUsuario);
+        $queryUsuario->bindParam(":usuario", $_POST['usuario']);
+        $queryUsuario->execute();
+        if($queryUsuario->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, nome de usuário em uso');
+        }
+
 
         $sql = "INSERT INTO pessoas (nome, telefone, tipo, usuario, senha) VALUES (:nome, :telefone, :tipo, :usuario, :senha)";
         $query = $db->prepare($sql);
