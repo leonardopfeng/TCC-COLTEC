@@ -39,20 +39,25 @@
                     <form role="form" action="/exercicios/salvareditar" method="post" class="jsonForm">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="id">Código</label>
-                                <input type="number" class="form-control" id="id" name="id" readonly value="{{ linha['id'] }}">
+                                <label for="id_exercicio">Código</label>
+                                <input type="number" class="form-control" id="id_exercicio" name="id_exercicio" readonly value="{{ linha['id_exercicio'] }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="nome">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required value="{{ linha['nome'] }}">
+                                <input type="text" class="form-control" id="nome_exercicio" name="nome_exercicio" placeholder="Nome" required value="{{ linha['nome_exercicio'] }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="url_video">URL</label>
+                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL" required value="{{ linha['url_video'] }}">
                             </div>
 
                             <div class="form-group">
                                 <label for="categoria">Exercício</label>
-                                <select class="form-control" id="categoria" name="categoria">
+                                <select class="form-control" id="grupo_muscular" name="grupo_muscular">
                                     <option value="">- Selecione a categoria -</option>
-                                    {% for categoria in linhacategoria %}
+                                    {% for categoria in linhaCategoria %}
                                         <option value="{{ categoria['id'] }}">{{ categoria['id'] }} - {{ categoria['nome'] }}</option>
                                     {% endfor %}
                                 </select>

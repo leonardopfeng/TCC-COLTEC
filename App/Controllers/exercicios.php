@@ -36,16 +36,20 @@ class exercicios Extends Controller
     {
         $db = Conexao::connect();
 
-        $sql = "SELECT * FROM exercicios WHERE id=:id";
+        $sql = "SELECT * FROM exercicios WHERE id_exercicio=:id_exercicio";
 
         $query = $db->prepare($sql);
-        $query->bindParam(":id", $id);
-
-        $resultado = $query->execute();
-
+        $query->bindParam(":id_exercicio", $id);
+        $query->execute();
         $linha = $query->fetch();
 
-        echo $this->template->twig->render('exercicios/editar.html.twig', compact('linha'));
+        $sqlCategoria = "SELECT grupo_muscular.id, grupo_muscular.nome FROM grupo_muscular";
+        $queryCategoria = $db->prepare($sqlCategoria);
+        $queryCategoria->execute();
+        $linhaCategoria = $queryCategoria->fetchAll();
+
+
+        echo $this->template->twig->render('exercicios/editar.html.twig', compact('linha','linhaCategoria'));
     }
 
 
@@ -54,6 +58,24 @@ class exercicios Extends Controller
     {
 
         $db = Conexao::connect();
+
+        // ve se já nao tem exercicio cadastrado com esse nome
+        $sqlNome = "SELECT * FROM exercicios WHERE nome_exercicio=:nome_exercicio";
+        $queryNome = $db->prepare($sqlNome);
+        $queryNome->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
+        $queryNome->execute();
+        if($queryNome->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, exercício ja cadastrado');
+        }
+
+        // ve se já nao tem exercicio cadastrado com essa URL
+        $sqlNome = "SELECT * FROM exercicios WHERE url_video=:url_video";
+        $queryNome = $db->prepare($sqlNome);
+        $queryNome->bindParam(":url_video", $_POST['url_video']);
+        $queryNome->execute();
+        if($queryNome->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, exercício ja cadastrado com esta URL');
+        }
 
         $sql = "INSERT INTO exercicios (nome_exercicio, grupo_muscular, url_video) VALUES(:nome_exercicio, :grupo_muscular, :url_video)";
         $query = $db->prepare($sql);
@@ -72,18 +94,36 @@ class exercicios Extends Controller
 
         $db = Conexao::connect();
 
-        $sql = "UPDATE pessoas SET nome=:nome, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
+        // ve se já nao tem exercicio cadastrado com esse nome
+        $sqlNome = "SELECT * FROM exercicios WHERE nome_exercicio=:nome_exercicio AND id_exercicio!=:id_exercicio";
+        $queryNome = $db->prepare($sqlNome);
+        $queryNome->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
+        $queryNome->bindParam(":id_exercicio", $_POST['id_exercicio']);
+        $queryNome->execute();
+        if($queryNome->rowCount()==1){
+            $this->retornaErro('Erro ao editar, exercício ja cadastrado');
+        }
+
+        // ve se já nao tem exercicio cadastrado com essa URL
+        $sqlNome = "SELECT * FROM exercicios WHERE url_video=:url_video AND id_exercicio!=:id_exercicio";
+        $queryNome = $db->prepare($sqlNome);
+        $queryNome->bindParam(":url_video", $_POST['url_video']);
+        $queryNome->bindParam(":id_exercicio", $_POST['id_exercicio']);
+        $queryNome->execute();
+        if($queryNome->rowCount()==1){
+            $this->retornaErro('Erro ao editar, exercício ja cadastrado com esta URL');
+        }
+
+        $sql = "UPDATE exercicios SET nome_exercicio=:nome_exercicio, grupo_muscular=:grupo_muscular WHERE id_exercicio=:id_exercicio";
 
         $query = $db->prepare($sql);
-        $query->bindParam(":nome", $_POST['nome']);
-        $query->bindParam(":usuario", $_POST['usuario']);
-        $query->bindParam(":tipo", $_POST['tipo']);
-        $query->bindParam(":senha", $criptografaSenha);
-        $query->bindParam(":id", $_POST['id']);
+        $query->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
+        $query->bindParam(":grupo_muscular", $_POST['grupo_muscular']);
+        $query->bindParam(":id_exercicio", $_POST['id_exercicio']);
         $query->execute();
 
         if ($query->rowCount()==1) {
-            $this->retornaOK('A pessoa foi alterada com sucesso');
+            $this->retornaOK('O exercício foi alterado com sucesso');
         }else{
             $this->retornaOK('Nenhum dado alterado');
         }
@@ -91,19 +131,21 @@ class exercicios Extends Controller
 
     public function excluir(){
 
+
         $db = Conexao::connect();
 
-        $sql = "DELETE FROM exercicios WHERE id=:id";
+        $sql = "DELETE FROM exercicios WHERE id_exercicio=:id_exercicio";
 
         $query = $db->prepare($sql);
-        $query->bindParam(":id", $_POST['id']);
+        $query->bindParam(":id_exercicio", $_POST['id']);
         $query->execute();
 
         if ($query->rowCount()==1) {
             $this->retornaOK('Excluido com sucesso');
         }else{
-            $this->retornaErro('Erro ao excluir os dados');
+            $this->retornaErro('Erro ao excluir');
         }
+
 
     }
 

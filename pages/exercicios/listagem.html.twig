@@ -69,8 +69,8 @@
                 formatters: {
                     "commands": function(column, row)
                     {
-                        return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id   + "\"><span class=\"fas fa-edit\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id_exercicio   + "\"><span class=\"fas fa-edit\"></span></button> " +
+                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id_exercicio + "\"><span class=\"fa fa-trash\"></span></button>";
                     }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
@@ -86,10 +86,10 @@
         });
 
 
-        function excluir(id){
+        function excluir(id_exercicio){
             $.post(
                 "/exercicios/excluir",
-                { id: id },
+                { id: id_exercicio },
                 function( data ) {
                     if (data.status==0){
                         iziToast.error({
