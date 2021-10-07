@@ -41,6 +41,14 @@ class grupo_muscular Extends Controller
     {
         $db = Conexao::connect();
 
+        $sqlCategoria = "SELECT * FROM grupo_muscular WHERE nome=:nome";
+        $queryCategoria = $db->prepare($sqlCategoria);
+        $queryCategoria->bindParam(":nome", $_POST['nome']);
+        $queryCategoria->execute();
+        if($queryCategoria->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, esta categoria já foi cadastrada');
+        }
+
         $sql = "INSERT INTO grupo_muscular (nome) VALUES(:nome)";
         $query = $db->prepare($sql);
         $query->bindParam(":nome", $_POST['nome']);
@@ -58,8 +66,16 @@ class grupo_muscular Extends Controller
         try {
             $db = Conexao::connect();
 
-            $sql = "UPDATE grupo_muscular SET nome=:nome WHERE id=:id";
+            $sqlCategoria = "SELECT * FROM grupo_muscular WHERE nome=:nome AND id!=:id";
+            $queryCategoria = $db->prepare($sqlCategoria);
+            $queryCategoria->bindParam(":nome", $_POST['nome']);
+            $queryCategoria->bindParam(":id", $_POST['id']);
+            $queryCategoria->execute();
+            if($queryCategoria->rowCount()==1){
+                $this->retornaErro('Esta categoria já foi cadastrada');
+            }
 
+            $sql = "UPDATE grupo_muscular SET nome=:nome WHERE id=:id";
             $query = $db->prepare($sql);
             $query->bindParam(":nome", $_POST['nome']);
             $query->bindParam(":id", $_POST['id']);
