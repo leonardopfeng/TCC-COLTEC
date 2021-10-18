@@ -141,19 +141,25 @@ class Pessoas Extends ControllerSeguro
     }
 
     public function excluir(){
-        $db = Conexao::connect();
 
-        $sql = "DELETE FROM pessoas WHERE id=:id";
+        try{
+            $db = Conexao::connect();
 
-        $query = $db->prepare($sql);
-        $query->bindParam(":id", $_POST['id']);
-        $query->execute();
+            $sql = "DELETE FROM pessoas WHERE id=:id";
 
-        if ($query->rowCount()==1) {
-            $this->retornaOK('Excluido com sucesso');
-        }else{
-            $this->retornaErro('Erro ao excluir os dados');
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Excluido com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
         }
+
     }
 
 
