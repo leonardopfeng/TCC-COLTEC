@@ -191,8 +191,6 @@ class exercicios Extends Controller
 
         if ($busca!=''){
             $sql .= " and (
-                        
-                       url_video LIKE '%{$busca}%' OR
                        id_exercicio LIKE '%{$busca}%' OR
                        nome_exercicio LIKE '%{$busca}%' OR
                        nome LIKE '%{$busca}%'
