@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
 
     <style>
-        .list-group-item {
+        .list-group-item  {
             position: relative;
             display: block;
             padding: .75rem 1.25rem;
@@ -86,14 +86,14 @@
                         {% for exercicios in grupo.exercicios %}
                             <div class="list-group-item">
                                 {{ exercicios.nome_exercicio }}
-                                {%  if ( exercicios.id_exercicio==7 ) %}
+                                {%  if ( grupo.id!=10 ) %}
                                     <input type="number" name="serie[]" min="1" placeholder="Série" required >
                                 {% else %}
                                     <input type="number" name="serie[]" hidden value="0" placeholder="Série"  >
                                 {% endif %}
                                 <input type="number" name="carga[]" min="1" placeholder="Carga" required >
                                 <input type="number" name="repeticao[]" min="1" placeholder="Repetições" required >
-                                <input type="hidden1" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}" readonly>
+                                <input type="hidden" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}" readonly>
                              </div>
                        {%  endfor %}
                     </div>
@@ -116,6 +116,10 @@
             min-height: 400px;
         }
         #listaEsquerda .list-group-item {
+            text-align-all: justify;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
             border: 1px solid black;
             border-radius: 4px 4px;
             margin: 3px;

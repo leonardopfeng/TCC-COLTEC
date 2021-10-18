@@ -20,7 +20,8 @@ class testesortable Extends ControllerSeguro
 
     public function index()
     {
-        echo $this->template->twig->render('grupo_muscular/listagem.html.twig');
+        var_dump($_SESSION['id']);
+        echo $this->template->twig->render('testesortable/listagem.html.twig');
     }
 
     public function formCadastrar()
@@ -169,7 +170,7 @@ class testesortable Extends ControllerSeguro
     public function excluir(){
         $db = Conexao::connect();
 
-        $sql = "DELETE FROM grupo_muscular WHERE id=:id";
+        $sql = "DELETE FROM treinos WHERE idtreinos=:id";
 
         $query = $db->prepare($sql);
         $query->bindParam(":id", $_POST['id']);
@@ -186,12 +187,17 @@ class testesortable Extends ControllerSeguro
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT `id`, `nome` FROM grupo_muscular WHERE 1 ";
+        $sql = "SELECT * FROM treinos 
+                INNER JOIN clientes ON treinos.clientes_pessoa=clientes.pessoa 
+                INNER JOIN pessoas ON clientes.pessoa=pessoas.id 
+                WHERE clientes_pessoa = {$_SESSION['id']}
+                ";
 
         if ($busca!=''){
             $sql .= " and (
-                            id LIKE '%{$busca}%' OR
-                            nome LIKE '%{$busca}%'
+                            idtreinos LIKE '%{$busca}%' OR
+                            nome LIKE '%{$busca}%' OR
+                            status LIKE '%{$busca}%'
                             ) ";
         }
 
