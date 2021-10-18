@@ -48,6 +48,16 @@
         <!-- /.row -->
     </section>
 
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <iframe id="youtube" allowtransparency="true" scrolling="no" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 
@@ -70,7 +80,8 @@
                     "commands": function(column, row)
                     {
                         return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id_exercicio   + "\"><span class=\"fas fa-edit\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id_exercicio + "\"><span class=\"fa fa-trash\"></span></button>";
+                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id_exercicio + "\"><span class=\"fa fa-trash\"></span></button> " +
+                            "<button type=\"button\" class=\"btn btn-info command-video\"  data-toggle=\"modal\" data-target=\"#videoModal\"  data-video=\"" + row.url_video + "\"><span class=\"fas fa-video\"></span></button>";
                     }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
@@ -81,10 +92,19 @@
                 }).end().find(".command-delete").on("click", function(e)
                 {
                     iziToastExcluir($(this).data("row-id"));
+                 }).end().find(".command-video").on("click", function(e)
+                 {
+                     var button = $(this) // Button that triggered the modal
+                     var video = button.data('video') // Extract info from data-* attributes
+                     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                     var modal = $('#videoModal')
+                     modal.find('iframe').attr('src', 'http://www.youtube.com/embed/' + video)
+
+                     $('#videoModal').modal();
                 });
             });
         });
-
 
         function excluir(id_exercicio){
             $.post(

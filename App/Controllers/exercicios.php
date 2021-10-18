@@ -52,12 +52,37 @@ class exercicios Extends Controller
         echo $this->template->twig->render('exercicios/editar.html.twig', compact('linha','linhaCategoria'));
     }
 
+    public function video($id)
+    {
+        $db = Conexao::connect();
+
+        $sql = "SELECT * FROM exercicios WHERE id_exercicio=:id_exercicio";
+
+        $query = $db->prepare($sql);
+        $query->bindParam(":id_exercicio", $id);
+        $query->execute();
+        $linha = $query->fetch();
+
+        $sqlCategoria = "SELECT grupo_muscular.id, grupo_muscular.nome FROM grupo_muscular";
+        $queryCategoria = $db->prepare($sqlCategoria);
+        $queryCategoria->execute();
+        $linhaCategoria = $queryCategoria->fetchAll();
+
+
+        echo $this->template->twig->render('exercicios/editar.html.twig', compact('linha','linhaCategoria'));
+    }
+
 
 
     public function salvarCadastrar()
     {
 
         $db = Conexao::connect();
+
+        $video = $this->idVideo($_POST['url_video']);
+        if (!$video){
+            $this->retornaErro('a');
+        }
 
         // ve se já nao tem exercicio cadastrado com esse nome
         $sqlNome = "SELECT * FROM exercicios WHERE nome_exercicio=:nome_exercicio";
@@ -71,7 +96,7 @@ class exercicios Extends Controller
         // ve se já nao tem exercicio cadastrado com essa URL
         $sqlNome = "SELECT * FROM exercicios WHERE url_video=:url_video";
         $queryNome = $db->prepare($sqlNome);
-        $queryNome->bindParam(":url_video", $_POST['url_video']);
+        $queryNome->bindParam(":url_video", $video);
         $queryNome->execute();
         if($queryNome->rowCount()==1){
             $this->retornaErro('Erro ao cadatrar, exercício ja cadastrado com esta URL');
@@ -81,7 +106,7 @@ class exercicios Extends Controller
         $query = $db->prepare($sql);
         $query->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
         $query->bindParam(":grupo_muscular", $_POST['grupo_muscular']);
-        $query->bindParam(":url_video", $_POST['url_video']);
+        $query->bindParam(":url_video", $video);
         $query->execute();
 
         if ($query->rowCount()==1) {
@@ -104,6 +129,11 @@ class exercicios Extends Controller
             $this->retornaErro('Erro ao editar, exercício ja cadastrado');
         }
 
+        $video = $this->idVideo($_POST['url_video']);
+        if (!$video){
+            $this->retornaErro('URL inválida');
+        }
+
         // ve se já nao tem exercicio cadastrado com essa URL
         $sqlNome = "SELECT * FROM exercicios WHERE url_video=:url_video AND id_exercicio!=:id_exercicio";
         $queryNome = $db->prepare($sqlNome);
@@ -114,11 +144,13 @@ class exercicios Extends Controller
             $this->retornaErro('Erro ao editar, exercício ja cadastrado com esta URL');
         }
 
-        $sql = "UPDATE exercicios SET nome_exercicio=:nome_exercicio, grupo_muscular=:grupo_muscular WHERE id_exercicio=:id_exercicio";
+
+        $sql = "UPDATE exercicios SET nome_exercicio=:nome_exercicio, grupo_muscular=:grupo_muscular, url_video=:video WHERE id_exercicio=:id_exercicio";
 
         $query = $db->prepare($sql);
         $query->bindParam(":nome_exercicio", $_POST['nome_exercicio']);
         $query->bindParam(":grupo_muscular", $_POST['grupo_muscular']);
+        $query->bindParam(":video", $video);
         $query->bindParam(":id_exercicio", $_POST['id_exercicio']);
         $query->execute();
 
@@ -170,6 +202,13 @@ class exercicios Extends Controller
 
         $bootgrid = new Bootgrid($sql);
         echo $bootgrid->show();
+    }
+
+    public function idVideo($url)
+    {
+        if (strlen($url)<15) return $url;
+        parse_str( parse_url( $url, PHP_URL_QUERY ), $my_array_of_vars );
+        return (isset($my_array_of_vars['v']) && $my_array_of_vars['v']!='' ? $my_array_of_vars['v'] : false);
     }
 
 }
