@@ -30,7 +30,7 @@ class login Extends Controller
 
         $senhacriptografada = $this->criptografa($senha);
 
-        $sql = "SELECT * FROM pessoas WHERE usuario=:usuario AND senha=:senha";
+        $sql = "SELECT * FROM pessoas WHERE usuario=:usuario AND senha=:senha AND status='ativo'";
 
         $resultados = $db ->prepare($sql);
 
