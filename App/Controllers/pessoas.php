@@ -162,11 +162,29 @@ class Pessoas Extends ControllerSeguro
 
     }
 
+    public function desativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE pessoas SET status='desativado' WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+
+        echo $this->template->twig->render('pessoas/listagem.html.twig');
+    }
+
 
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`  FROM pessoas WHERE 1 ";
+        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, `status`  FROM pessoas WHERE 1 ";
 
         if ($busca!=''){
             $sql .= " and (
@@ -174,7 +192,8 @@ class Pessoas Extends ControllerSeguro
                         nome LIKE '%{$busca}%' OR
                         telefone LIKE '%{$busca}%' OR
                         usuario LIKE '%{$busca}%' OR
-                        tipo LIKE '%{$busca}%' 
+                        tipo LIKE '%{$busca}%' OR
+                        status LIKE '%{$busca}%'
                         ) ";
         }
 

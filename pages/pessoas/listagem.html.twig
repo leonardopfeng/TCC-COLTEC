@@ -40,6 +40,7 @@
                         <th data-column-id="telefone" data-order="desc" data-sortable="true">Telefone</th>
                         <th data-column-id="usuario" data-order="desc" data-sortable="true">Usuário</th>
                         <th data-column-id="tipo" data-order="desc" data-sortable="true">Função</th>
+                        <th data-column-id="status" data-order="desc" data-sortable="true">Status</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
                     </tr>
                     </thead>
@@ -71,8 +72,8 @@
                     "commands": function(column, row)
                     {
                         return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id   + "\"><span class=\"fas fa-edit\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button>";
-                    }
+                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button> " +
+                            "<button type=\"button\" class=\"btn btn-info command-status\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>";                    }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
             {
@@ -82,6 +83,9 @@
                 }).end().find(".command-delete").on("click", function(e)
                 {
                     iziToastExcluir($(this).data("row-id"));
+                }).end().find(".command-status").on("click", function(e)
+                {
+                    document.location = '/pessoas/desativar/' + $(this).data("row-id");
                 });
             });
         });
