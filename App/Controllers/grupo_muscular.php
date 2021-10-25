@@ -8,7 +8,7 @@ use App\Conexao;
 use App\Bootgrid;
 use App\ControllerSeguro;
 
-class grupo_muscular Extends Controller
+class grupo_muscular Extends ControllerSeguro
 {
     public function index()
     {
