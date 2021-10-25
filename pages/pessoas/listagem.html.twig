@@ -40,7 +40,6 @@
                         <th data-column-id="telefone" data-order="desc" data-sortable="true">Telefone</th>
                         <th data-column-id="usuario" data-order="desc" data-sortable="true">Usuário</th>
                         <th data-column-id="tipo" data-order="desc" data-sortable="true">Função</th>
-                        <th data-column-id="status" data-order="desc" data-sortable="true">Status</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
                     </tr>
                     </thead>
@@ -69,12 +68,18 @@
             grid = $("#grid-data").bootgrid({
                 ajax: true,
                 url: "/pessoas/bootgrid",
+                statusMapping: {
+                    0: "",
+                    1: "table-danger"
+                },
+
                 formatters: {
                     "commands": function(column, row)
                     {
                         return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id   + "\"><span class=\"fas fa-edit\"></span></button> " +
                             "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-info command-status\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>";                    }
+                            (row.status==0?"<button type=\"button\" class=\"btn btn-info command-status\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>":"<button type=\"button\" class=\"btn btn-info command-status-ativar\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>");
+                    }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
             {
@@ -87,6 +92,9 @@
                 }).end().find(".command-status").on("click", function(e)
                 {
                     iziToastDesativar($(this).data("row-id"));
+                }).end().find(".command-status-ativar").on("click", function(e)
+                {
+                    iziToastAtivar($(this).data("row-id"));
                 });
             });
         });
@@ -131,6 +139,51 @@
                 "json"
             );
         }
+        function iziToastAtivar(id){
+            iziToast.show({
+                timeout: 20000,
+                icon: 'fas fa-user-lock',
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                color: 'yellow',
+                id: 'question',
+                zindex: 999,
+                title: 'Desativar: ',
+                message: 'Deseja realmente reativar?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>SIM</b></button>', function (instance, toast) {
+
+                        $.post(
+                            "/pessoas/ativar",
+                            { id: id },
+                            function( data ) {
+                                if (data.status==0){
+                                    iziToast.error({
+                                        message: data.mensagem
+                                    });
+                                }else{
+                                    iziToast.success({
+                                        message: data.mensagem
+                                    });
+                                    grid.bootgrid("reload");
+                                }
+                            },
+                            "json"
+                        );
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                    ['<button>NÃO</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }, true],
+                ]
+            });
+        }
+
     </script>
 
 
