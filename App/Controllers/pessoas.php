@@ -10,6 +10,7 @@ use App\ControllerSeguro;
 
 class Pessoas Extends ControllerSeguro
 {
+    protected $nivel = [ 'admin' ];
 
     public function index()
     {
@@ -174,7 +175,28 @@ class Pessoas Extends ControllerSeguro
             $query->execute();
 
             if ($query->rowCount()==1) {
-                $this->retornaOK('Excluido com sucesso');
+                $this->retornaOK('Alterado com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+    }
+
+    public function ativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE pessoas SET status='ativo' WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Alterado com com sucesso');
             }else{
                 $this->retornaErro('Erro ao excluir os dados');
             }
@@ -187,7 +209,8 @@ class Pessoas Extends ControllerSeguro
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, `status`  FROM pessoas WHERE 1 ";
+        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, IF(STRCMP(status,'ativo') = 0, 0, 1) as status  FROM pessoas WHERE 1 ";
+//        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, `status`  FROM pessoas WHERE 1 ";
 
         if ($busca!=''){
             $sql .= " and (
