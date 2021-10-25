@@ -8,8 +8,9 @@ use App\Conexao;
 use App\Bootgrid;
 use App\ControllerSeguro;
 
-class exercicios Extends Controller
+class exercicios Extends ControllerSeguro
 {
+
     public function index()
     {
         echo $this->template->twig->render('exercicios/listagem.html.twig');
