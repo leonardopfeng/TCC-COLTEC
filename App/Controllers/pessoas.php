@@ -173,11 +173,14 @@ class Pessoas Extends ControllerSeguro
             $query->bindParam(":id", $_POST['id']);
             $query->execute();
 
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Excluido com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
         }catch(\Exception $exception){
             $this->retornaErro($exception->getMessage());
         }
-
-        echo $this->template->twig->render('pessoas/listagem.html.twig');
     }
 
 

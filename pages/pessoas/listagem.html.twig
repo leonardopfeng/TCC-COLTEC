@@ -59,6 +59,7 @@
     <script src="/dist/js/jquery.bootgrid.fa.js"></script>
     <script src="/dist/js/iziToast.js"></script>
     <script src="/dist/js/iziToastExcluir.js"></script>
+    <script src="/dist/js/iziToastDesativar.js"></script>
 {% endblock %}
 
 {% block jquery %}
@@ -85,7 +86,7 @@
                     iziToastExcluir($(this).data("row-id"));
                 }).end().find(".command-status").on("click", function(e)
                 {
-                    document.location = '/pessoas/desativar/' + $(this).data("row-id");
+                    iziToastDesativar($(this).data("row-id"));
                 });
             });
         });
@@ -94,6 +95,26 @@
         function excluir(id){
             $.post(
                 "/pessoas/excluir",
+                { id: id },
+                function( data ) {
+                    if (data.status==0){
+                        iziToast.error({
+                            message: data.mensagem
+                        });
+                    }else{
+                        iziToast.success({
+                            message: data.mensagem
+                        });
+                        grid.bootgrid("reload");
+                    }
+                },
+                "json"
+            );
+        }
+
+        function desativar(id){
+            $.post(
+                "/pessoas/desativar",
                 { id: id },
                 function( data ) {
                     if (data.status==0){
