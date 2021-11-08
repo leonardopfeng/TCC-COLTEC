@@ -36,7 +36,7 @@ to get the desired effect
     {% if (session.tipo=='admin') %}
         {% include 'includes/sidebar.html.twig' %}
     {% elseif (session.tipo=='cliente') %}
-        {{ 'cliente' }}
+        {% include 'includes/sidebarCliente.html.twig' %}
     {% elseif (session.tipo=='personal') %}
         {{ 'personal' }}
     {% endif %}
