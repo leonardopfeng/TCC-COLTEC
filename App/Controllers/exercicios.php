@@ -11,6 +11,8 @@ use App\ControllerSeguro;
 class exercicios Extends ControllerSeguro
 {
 
+   protected $nivel = ['admin'];
+
     public function index()
     {
         echo $this->template->twig->render('exercicios/listagem.html.twig');
