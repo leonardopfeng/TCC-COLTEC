@@ -9,19 +9,19 @@ use App\ControllerSeguro;
 
 class testesortable Extends ControllerSeguro
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-//        if ($_SESSION['tipo']!='personal'){
-//            $this->errorPermission();
-//        }
-    }
-
+    protected $nivel = [ 'admin', 'personal', 'cliente' ];
     public function index()
     {
         var_dump($_SESSION['id']);
         echo $this->template->twig->render('testesortable/listagem.html.twig');
+    }
+
+    public function exibirExercicios($idTreino)
+    {
+
+      $_SESSION['idTreino'] = $idTreino;
+
+      echo $this->template->twig->render('testesortable/exibirExercicios.html.twig');
     }
 
     public function formCadastrar()
@@ -187,10 +187,9 @@ class testesortable Extends ControllerSeguro
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT * FROM treinos 
-                INNER JOIN clientes ON treinos.clientes_pessoa=clientes.pessoa 
-                INNER JOIN pessoas ON clientes.pessoa=pessoas.id 
-                WHERE clientes_pessoa = {$_SESSION['id']}
+        $sql = "SELECT treinos.idtreinos, treinos.clientes_pessoa, treinos.personal_pessoa, pessoas.nome, treinos.status FROM treinos 
+                INNER JOIN pessoas ON pessoas.id=treinos.clientes_pessoa 
+                WHERE clientes_pessoa = $_SESSION[id];
                 ";
 
         if ($busca!=''){
@@ -198,6 +197,29 @@ class testesortable Extends ControllerSeguro
                             idtreinos LIKE '%{$busca}%' OR
                             nome LIKE '%{$busca}%' OR
                             status LIKE '%{$busca}%'
+                            ) ";
+        }
+
+        $bootgrid = new Bootgrid($sql);
+        echo $bootgrid->show();
+    }
+
+    public function bootgridExercicios()
+    {
+        $busca = addslashes($_POST['searchPhrase']);
+        $sql = "SELECT * FROM exercicios_treino 
+                INNER JOIN treinos ON exercicios_treino.id_treino=treinos.idtreinos 
+                INNER JOIN exercicios ON exercicios_treino.id_exercicio=exercicios.id_exercicio 
+                WHERE id_treino = $_SESSION[idTreino];
+                ";
+
+        if ($busca!=''){
+            $sql .= " and (
+                            id_treino LIKE '%{$busca}%' OR
+                            serie LIKE '%{$busca}%' OR
+                            carga LIKE '%{$busca}%' OR
+                            repeticao LIKE '%{$busca}%' OR
+                            nome_exercicio LIKE '%{$busca}%'
                             ) ";
         }
 

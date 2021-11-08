@@ -44,7 +44,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card card-primary">
-                <div class="card-body">
+                <div class="card-body" {% if(session.tipo=='cliente') %} hidden {% endif %}>
                     <div class="form-group">
                         <label for="clientes">Clientes</label>
                         <select class="form-control" id="clientes" placeholder="NOME">
