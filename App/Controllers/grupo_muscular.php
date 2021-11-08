@@ -10,6 +10,8 @@ use App\ControllerSeguro;
 
 class grupo_muscular Extends ControllerSeguro
 {
+    protected $nivel = [ 'admin' ];
+
     public function index()
     {
         echo $this->template->twig->render('grupo_muscular/listagem.html.twig');
