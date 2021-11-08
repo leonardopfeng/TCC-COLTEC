@@ -44,7 +44,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card card-primary">
-                <div class="card-body" {% if(session.tipo=='cliente') %} hidden {% endif %}>
+                <div class="card-body" {% if(session.tipo=='cliente' or session.tipo=='admin') %} hidden {% endif %}>
                     <div class="form-group">
                         <label for="clientes">Clientes</label>
                         <select class="form-control" id="clientes" placeholder="NOME">
@@ -59,16 +59,16 @@
         </div>
     </div>
     <div class="d-none" id="exercicios">
-    <form action="/testesortable/salvarCadastrar" method="post" class="jsonForm col-5">
+        <form action="/testesortable/salvarCadastrar" method="post" class="jsonForm col-5">
 
 
 
-        <div class="list-group col" id="listaEsquerda">
+            <div class="list-group col" id="listaEsquerda">
 
-        </div>
-        <button type="submit" class="btn btn-success">Salvar</button>
-        ID PESSOA <input type="text" name="clientes" id="clientes_id" value="">
-    </form>
+            </div>
+            <button type="submit" class="btn btn-success">Salvar</button>
+            ID PESSOA <input type="text" name="clientes" id="clientes_id" value="">
+        </form>
 
     <div class="list-group col-7 listaDireita" id="accordion">
         {% set i = 0 %}

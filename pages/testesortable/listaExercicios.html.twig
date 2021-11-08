@@ -1,0 +1,112 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+
+
+{% block title %}| Cadastro Treinos{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/dist/css/iziToast.min.css">
+
+    <style>
+        .list-group-item  {
+            position: relative;
+            display: block;
+            padding: .75rem 1.25rem;
+            margin-bottom: -1px;
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,.125);
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Visualização dos exercícios
+                        </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item active">Treino</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="exercicios">
+        <div class="list-group col-lg-12" id="accordion">
+            {% set i = 0 %}
+            {%  for exercicio in informacoes  %}
+                <div class="card">
+                    <div class="card-header" id="{{ i }}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
+                                {{ exercicio.nome_exercicio }}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse{{ i }}" class="collapse " aria-labelledby="{{ i }}" data-parent="#accordion">
+                        <div class="list-group ">
+                            {% for informacao in exercicio.info %}
+                                <div class="list-group-item">
+                                    Serie: {{ informacao.serie }}
+                                    Repetição: {{ informacao.repeticao }}
+                                </div>
+                            {%  endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% set i = i + 1 %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="d-none" id="exercicios">
+    </div>
+
+{% endblock %}
+
+
+
+{% block javascriptPlugins %}
+    <script src="/dist/js/jquery.form.js"></script>
+    <script src="/dist/js/iziToast.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+{% endblock %}
+
+{% block jquery %}
+    <script>
+        $(document).ready(function(){
+            $('.jsonForm').ajaxForm({
+                dataType:  'json',
+
+                success:   function(d){
+                    if (d.status==0){
+                        iziToast.error({
+                            message: d.mensagem
+                        });
+                    }else{
+                        iziToast.success({
+                            message: d.mensagem
+                        });
+                        $('.jsonForm').trigger("reset");
+                    }
+                }
+
+            });
+
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

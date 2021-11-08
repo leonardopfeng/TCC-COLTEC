@@ -24,29 +24,37 @@ class testesortable Extends ControllerSeguro
       echo $this->template->twig->render('testesortable/exibirExercicios.html.twig');
     }
 
+    public function listaExercicios($idTreino){
+
+        $_SESSION['idTreino'] = $idTreino;
+
+        $db = Conexao::connect();
+
+        $sqlExercicio = "SELECT exercicios_treino.id_exercicio, exercicios.nome_exercicio FROM exercicios_treino
+                        INNER JOIN exercicios ON exercicios_treino.id_exercicio = exercicios.id_exercicio
+                        WHERE id_treino = $_SESSION[idTreino]";
+        $queryExercicio = $db->prepare($sqlExercicio);
+        $queryExercicio->execute();
+        $i=0;
+        while($linhaExercicio = $queryExercicio->fetchObject()){
+            $sqlInfo = "SELECT exercicios_treino.id_exercicio, exercicios_treino.serie,
+                        exercicios_treino.repeticao, exercicios_treino.carga, exercicios.url_video
+                        FROM treinos                    
+                        INNER JOIN exercicios_treino ON exercicios_treino.id_treino=treinos.idtreinos
+                        INNER JOIN exercicios ON exercicios_treino.id_exercicio=exercicios.id_exercicio
+                        WHERE treinos.idtreinos = $_SESSION[idTreino] and exercicios_treino.id_exercicio ={$linhaExercicio->id_exercicio}";
+            $queryInfo = $db->query($sqlInfo);
+            $informacoes[$i] = $linhaExercicio;
+            $informacoes[$i]->info = $queryInfo->fetchAll(\PDO::FETCH_OBJ);
+            $i++;
+        }
+    
+        echo $this->template->twig->render('testesortable/listaExercicios.html.twig', compact('informacoes'));
+    }
+
     public function formCadastrar()
     {
         $db = Conexao::connect();
-
-      /*  $sql_grupomuscular = "SELECT id, nome FROM grupo_muscular";
-
-      $sql_grupomuscular = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome FROM grupo_muscular INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular;";
-
-        $query_grupomuscular = $db->prepare($sql_grupomuscular);
-
-        $query_grupomuscular->execute();
-
-        $grupomuscular = $query_grupomuscular->fetchAll();
-
-        print_r($grupomuscular);*/
-
-
-
-       /* $sql_aaaa = "SELECT exercicios.nome_exercicio, grupo_muscular.id, grupo_muscular.nome
-                              FROM grupo_muscular
-                              INNER JOIN exercicios ON grupo_muscular.id=exercicios.grupo_muscular";*/
-
-
 
         $sql_grupomuscular = "SELECT * FROM grupo_muscular ORDER by nome";
 
