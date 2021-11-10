@@ -12,7 +12,6 @@ class testesortable Extends ControllerSeguro
     protected $nivel = [ 'admin', 'personal', 'cliente' ];
     public function index()
     {
-        var_dump($_SESSION['id']);
         echo $this->template->twig->render('testesortable/listagem.html.twig');
     }
 
@@ -22,6 +21,19 @@ class testesortable Extends ControllerSeguro
       $_SESSION['idTreino'] = $idTreino;
 
       echo $this->template->twig->render('testesortable/exibirExercicios.html.twig');
+    }
+
+    public function listaTreinos(){
+
+        $db = Conexao::connect();
+
+        $sql = "SELECT * FROM treinos WHERE clientes_pessoa = $_SESSION[id]";
+        $query = $db->prepare($sql);
+        $query->execute();
+
+        $treinos = $query->fetchAll();
+
+        echo $this->template->twig->render('testesortable/listaTreinos.html.twig',compact('treinos'));
     }
 
     public function listaExercicios($idTreino){
@@ -106,6 +118,7 @@ class testesortable Extends ControllerSeguro
         try {
 
             $cliente = $_POST['clientes'];
+
 
             $db = Conexao::connect();
             $db->beginTransaction();
