@@ -14,7 +14,7 @@ class login Extends Controller
         if(isset($_SESSION['logado']) && $_SESSION['logado']){
 
            if($_SESSION['tipo']=='cliente'){
-               header("location: /testesortable");
+               header("location: /testesortable/listaTreinos");
                exit;
            }
            elseif($_SESSION['tipo']=='personal'){
