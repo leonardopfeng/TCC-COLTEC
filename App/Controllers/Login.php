@@ -18,7 +18,7 @@ class login Extends Controller
                exit;
            }
            elseif($_SESSION['tipo']=='personal'){
-               header("location: /exercicios");
+               header("location: /testesortable/formcadastrar");
                exit;
            }
            elseif($_SESSION['tipo']=='admin'){
