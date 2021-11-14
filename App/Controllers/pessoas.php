@@ -124,21 +124,62 @@ class Pessoas Extends ControllerSeguro
 
         $db = Conexao::connect();
 
-        $sql = "UPDATE pessoas SET nome=:nome, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
-
-        $query = $db->prepare($sql);
-        $query->bindParam(":nome", $_POST['nome']);
-        $query->bindParam(":usuario", $_POST['usuario']);
-        $query->bindParam(":tipo", $_POST['tipo']);
-        $query->bindParam(":senha", $criptografaSenha);
-        $query->bindParam(":id", $_POST['id']);
-        $query->execute();
-
-        if ($query->rowCount()==1) {
-            $this->retornaOK('A pessoa foi alterada com sucesso');
-        }else{
-            $this->retornaOK('Nenhum dado alterado');
+        // ve se já nao tem usuario cadastrado com esse login
+        $sqlUsuario = "SELECT * FROM pessoas WHERE usuario=:usuario and id!=:id";
+        $queryUsuario = $db->prepare($sqlUsuario);
+        $queryUsuario->bindParam(":id", $_POST['id']);
+        $queryUsuario->bindParam(":usuario", $_POST['usuario']);
+        $queryUsuario->execute();
+        if($queryUsuario->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, nome de usuário em uso');
         }
+
+        // ve se já nao tem usuario cadastrado com esse login
+        $sqlTelefone = "SELECT * FROM pessoas WHERE telefone=:telefone and id!=:id";
+        $queryTelefone = $db->prepare($sqlTelefone);
+        $queryTelefone->bindParam(":id", $_POST['id']);
+        $queryTelefone->bindParam(":telefone", $_POST['telefone']);
+        $queryTelefone->execute();
+        if($queryTelefone->rowCount()==1){
+            $this->retornaErro('Erro ao editar, telefone em uso');
+        }
+
+        if ($_POST['senha']!=''){
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":nome", $_POST['nome']);
+            $query->bindParam(":telefone", $_POST['telefone']);
+            $query->bindParam(":usuario", $_POST['usuario']);
+            $query->bindParam(":tipo", $_POST['tipo']);
+            $query->bindParam(":senha", $criptografaSenha);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('A pessoa foi alterada com sucesso, e sua senha foi alterada');
+            }else{
+                $this->retornaErro('Nenhum dado alterado');
+            }
+        }else{
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":nome", $_POST['nome']);
+            $query->bindParam(":telefone", $_POST['telefone']);
+            $query->bindParam(":usuario", $_POST['usuario']);
+            $query->bindParam(":tipo", $_POST['tipo']);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('A pessoa foi alterada com sucesso, sem alteração de senha');
+            }else{
+                $this->retornaErro('Nenhum dado alterado');
+            }
+        }
+
+
     }
 
     public function excluir(){
