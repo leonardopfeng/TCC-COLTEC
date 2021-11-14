@@ -118,13 +118,15 @@ class testesortable Extends ControllerSeguro
         try {
 
             $cliente = $_POST['clientes'];
+            $nome_treino = $_POST['nome'];
 
 
             $db = Conexao::connect();
             $db->beginTransaction();
-            $query = $db->prepare("INSERT INTO treinos (clientes_pessoa, personal_pessoa, status) VALUES (:clientes, :personal, 'ativo') ");
+            $query = $db->prepare("INSERT INTO treinos (clientes_pessoa, personal_pessoa, nome, status) VALUES (:clientes, :personal, :nome, 'ativo') ");
             $query->bindParam(':clientes', $cliente);
             $query->bindParam(':personal', $_SESSION['id']);
+            $query->bindParam(':nome', $nome_treino);
             $query->execute();
 
 
@@ -204,20 +206,64 @@ class testesortable Extends ControllerSeguro
         }
     }
 
+    public function ativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE treinos SET status='ativo' WHERE idtreinos=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Alterado com com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+    }
+
+    public function desativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE treinos SET status='desativado' WHERE idtreinos=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Alterado com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+    }
+
 
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT treinos.idtreinos, treinos.clientes_pessoa, treinos.personal_pessoa, pessoas.nome, treinos.status FROM treinos 
+        $sql = "SELECT treinos.idtreinos, pessoas.nome, IF(STRCMP(treinos.status,'ativo') = 0, 0, 1) as status, treinos.nome as nome_treino
+                FROM TREINOS 
                 INNER JOIN pessoas ON pessoas.id=treinos.clientes_pessoa 
-                WHERE clientes_pessoa = $_SESSION[id];
+                WHERE personal_pessoa = $_SESSION[id]
                 ";
 
         if ($busca!=''){
             $sql .= " and (
-                            idtreinos LIKE '%{$busca}%' OR
-                            nome LIKE '%{$busca}%' OR
-                            status LIKE '%{$busca}%'
+                            treinos.idtreinos LIKE '%{$busca}%' OR
+                            pessoas.nome LIKE '%{$busca}%' OR
+                            treinos.status LIKE '%{$busca}%' OR
+                            treinos.nome LIKE '%{$busca}%'
                             ) ";
         }
 
@@ -225,27 +271,5 @@ class testesortable Extends ControllerSeguro
         echo $bootgrid->show();
     }
 
-    public function bootgridExercicios()
-    {
-        $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT * FROM exercicios_treino 
-                INNER JOIN treinos ON exercicios_treino.id_treino=treinos.idtreinos 
-                INNER JOIN exercicios ON exercicios_treino.id_exercicio=exercicios.id_exercicio 
-                WHERE id_treino = $_SESSION[idTreino];
-                ";
-
-        if ($busca!=''){
-            $sql .= " and (
-                            id_treino LIKE '%{$busca}%' OR
-                            serie LIKE '%{$busca}%' OR
-                            carga LIKE '%{$busca}%' OR
-                            repeticao LIKE '%{$busca}%' OR
-                            nome_exercicio LIKE '%{$busca}%'
-                            ) ";
-        }
-
-        $bootgrid = new Bootgrid($sql);
-        echo $bootgrid->show();
-    }
 
 }
