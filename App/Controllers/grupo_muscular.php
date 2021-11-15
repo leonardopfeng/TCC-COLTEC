@@ -74,7 +74,7 @@ class grupo_muscular Extends ControllerSeguro
             $queryCategoria->bindParam(":id", $_POST['id']);
             $queryCategoria->execute();
             if($queryCategoria->rowCount()==1){
-                $this->retornaErro('Esta categoria já foi cadastrada');
+                $this->retornaErro('Erro ao editar, grupo muscular já cadastrado');
             }
 
             $sql = "UPDATE grupo_muscular SET nome=:nome WHERE id=:id";
