@@ -71,6 +71,16 @@ class Pessoas Extends ControllerSeguro
             $this->retornaErro('Erro ao cadatrar, nome de usuário em uso');
         }
 
+        // ve se já nao tem usuario cadastrado com esse telefone
+        $sqlTelefone = "SELECT * FROM pessoas WHERE telefone=:telefone";
+        $queryTelefone = $db->prepare($sqlTelefone);
+        $queryTelefone->bindParam(":telefone", $_POST['telefone']);
+        $queryTelefone->execute();
+        if($queryTelefone->rowCount()==1){
+            $this->retornaErro('Erro ao cadastrar, telefone em uso');
+        }
+
+
 
         $sql = "INSERT INTO pessoas (nome, telefone, tipo, usuario, senha) VALUES (:nome, :telefone, :tipo, :usuario, :senha)";
         $query = $db->prepare($sql);
@@ -131,10 +141,10 @@ class Pessoas Extends ControllerSeguro
         $queryUsuario->bindParam(":usuario", $_POST['usuario']);
         $queryUsuario->execute();
         if($queryUsuario->rowCount()==1){
-            $this->retornaErro('Erro ao cadatrar, nome de usuário em uso');
+            $this->retornaErro('Erro ao editar, nome de usuário em uso');
         }
 
-        // ve se já nao tem usuario cadastrado com esse login
+        // ve se já nao tem usuario cadastrado com esse telefone
         $sqlTelefone = "SELECT * FROM pessoas WHERE telefone=:telefone and id!=:id";
         $queryTelefone = $db->prepare($sqlTelefone);
         $queryTelefone->bindParam(":id", $_POST['id']);
@@ -157,7 +167,7 @@ class Pessoas Extends ControllerSeguro
             $query->execute();
 
             if ($query->rowCount()==1) {
-                $this->retornaOK('A pessoa foi alterada com sucesso, e sua senha foi alterada');
+                $this->retornaOK('A pessoa foi alterada com sucesso');
             }else{
                 $this->retornaErro('Nenhum dado alterado');
             }
@@ -173,7 +183,7 @@ class Pessoas Extends ControllerSeguro
             $query->execute();
 
             if ($query->rowCount()==1) {
-                $this->retornaOK('A pessoa foi alterada com sucesso, sem alteração de senha');
+                $this->retornaOK('A pessoa foi alterada com sucesso');
             }else{
                 $this->retornaErro('Nenhum dado alterado');
             }
