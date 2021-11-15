@@ -1,7 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-{% block title %} Exercícios | Listagem{% endblock %}
+{% block title %} Mensalidades | Listagem{% endblock %}
 {% block stylesheet %}
     <link href="/dist/js/jquery.bootgrid.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
@@ -12,12 +12,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Exercícios
+                    <h1>Mensalidades
                         <small>Listagem</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Exercícios</li>
+                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item active">Mensalidade</li>
                     </ol>
                 </div>
             </div>
@@ -34,9 +35,11 @@
                 <table id="grid-data" class="table table-condensed table-hover table-striped">
                     <thead>
                     <tr>
-                        <th data-column-id="id_exercicio" >Código</th>
-                        <th data-column-id="nome_exercicio" data-order="desc" data-sortable="true">Nome</th>
-                        <th data-column-id="nome" data-order="desc" data-sortable="true">Categoria</th>
+                        <th data-column-id="id" >Código</th>
+                        <th data-column-id="nome" data-order="desc" data-sortable="true">Cliente</th>
+                        <th data-column-id="total" data-order="desc" data-sortable="true">Total</th>
+                        <th data-column-id="data_pagamento" data-order="desc" data-sortable="true">Data de Pagamento</th>
+                        <th data-column-id="data_vencimento" data-order="desc" data-sortable="true">Data de vencimento</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
                     </tr>
                     </thead>
@@ -45,16 +48,6 @@
         </div>
         <!-- /.row -->
     </section>
-
-    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <iframe id="youtube" allowtransparency="true" scrolling="no" width="100%" height="400" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
 
 {% endblock %}
 
@@ -73,41 +66,31 @@
         $(document).ready(function(){
             grid = $("#grid-data").bootgrid({
                 ajax: true,
-                url: "/exercicios/bootgrid",
+                url: "/mensalidades/bootgrid",
                 formatters: {
                     "commands": function(column, row)
                     {
-                        return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id_exercicio   + "\"><span class=\"fas fa-edit\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id_exercicio + "\"><span class=\"fa fa-trash\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-info command-video\"  data-toggle=\"modal\" data-target=\"#videoModal\"  data-video=\"" + row.url_video + "\"><span class=\"fas fa-video\"></span></button>";
+                        return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id   + "\"><span class=\"fas fa-edit\"></span></button> " +
+                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button>";
                     }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
             {
                 grid.find(".command-edit").on("click", function(e)
                 {
-                    document.location = '/exercicios/formeditar/' + $(this).data("row-id");
+                    document.location = '/mensalidades/formeditar/' + $(this).data("row-id");
                 }).end().find(".command-delete").on("click", function(e)
                 {
                     iziToastExcluir($(this).data("row-id"));
-                 }).end().find(".command-video").on("click", function(e)
-                 {
-                     var button = $(this) // Button that triggered the modal
-                     var video = button.data('video') // Extract info from data-* attributes
-                     // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                     // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                     var modal = $('#videoModal')
-                     modal.find('iframe').attr('src', 'http://www.youtube.com/embed/' + video)
-
-                     $('#videoModal').modal();
                 });
             });
         });
 
-        function excluir(id_exercicio){
+
+        function excluir(id){
             $.post(
-                "/exercicios/excluir",
-                { id: id_exercicio },
+                "/mensalidades/excluir",
+                { id: id },
                 function( data ) {
                     if (data.status==0){
                         iziToast.error({

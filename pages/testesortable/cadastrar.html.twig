@@ -2,12 +2,12 @@
 
 
 
-{% block title %}| Cadastro Treibnos{% endblock %}
+{% block title %}| Cadastro Treinos{% endblock %}
 {% block stylesheet %}
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
 
     <style>
-        .list-group-item {
+        .list-group-item  {
             position: relative;
             display: block;
             padding: .75rem 1.25rem;
@@ -28,7 +28,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="/testesortable"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li class="breadcrumb-item active">Treino</li>
                     </ol>
                 </div>
@@ -40,60 +40,141 @@
 
 {% block content %}
 
-<div class="d-flex">
-    <div class="list-group col-5" id="listaEsquerda">
-        <div class="list-group-item">Item 1.1 1</div>
-        <div class="list-group-item">Item 1.2</div>
-        <div class="list-group-item">Item 1.3</div>
-        <div class="list-group-item">Item 1.4</div>
-        <div class="list-group-item">Item 1.5</div>
-    </div>
 
-    <div class="list-group col-7">
-        {% for grupo in grupomuscular %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary">
+                <div class="card-body" {% if(session.tipo=='cliente' or session.tipo=='admin') %} hidden {% endif %}>
+                    <div class="form-group">
+                        <label for="clientes">Clientes</label>
+                        <select class="form-control" id="clientes" placeholder="NOME">
+                            <option value="">- Selecione o cliente -</option>
+                            {% for cliente in Clientes %}
+                                <option value="{{ cliente['pessoa'] }}">{{ cliente['nome'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-none" id="exercicios">
+        <form action="/testesortable/salvarCadastrar" method="post" class="jsonForm col-5">
+
+
+
+            <div class="list-group col" id="listaEsquerda">
+
+            </div>
+            <label for="nome">Nome do Treino</label>
+            <input type="text" id="nome" name="nome" required>
+            <br>
+            <button type="submit" class="btn btn-success">Salvar</button>
+            ID PESSOA <input type="text" name="clientes" id="clientes_id" value="" readonly>
+        </form>
+
+    <div class="list-group col-7 listaDireita" id="accordion">
+        {% set i = 0 %}
+        {%  for grupo in grupomuscular  %}
             <div class="card">
-                <div class="card-header" id="headingOne">
+                <div class="card-header" id="heading{{ i }}">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
                             {{ grupo.nome }}
                         </button>
                     </h5>
                 </div>
-
-                <div id="listaDireita" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    {% for exercicio in grupomuscular %}
-                    <div class="list-group-item">
-                        {{ grupo.nome_exercicio }}
+                <div id="collapse{{ i }}" class="collapse " aria-labelledby="heading{{ i }}" data-parent="#accordion">
+                    <div class="list-group ">
+                        {% for exercicios in grupo.exercicios %}
+                            <div class="list-group-item">
+                                {{ exercicios.nome_exercicio }}
+                                {%  if ( grupo.id!=10 ) %}
+                                    <input type="number" name="serie[]" min="1" placeholder="Série" required >
+                                {% else %}
+                                    <input type="number" name="serie[]" hidden value="0" placeholder="Série"  >
+                                {% endif %}
+                                <input type="number" name="carga[]" min="1" placeholder="Carga" required >
+                                <input type="number" name="repeticao[]" min="1" placeholder="Repetições" required >
+                                <input type="hidden" name="id_exercicio[]" value="{{  exercicios.id_exercicio }}" readonly>
+                             </div>
+                       {%  endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
+        {% set i = i + 1 %}
         {% endfor %}
     </div>
 </div>
+
+
+
+
+
+    <style>
+        .listaDireita input {
+            display: none;
+        }
+        #listaEsquerda {
+            min-height: 400px;
+        }
+        #listaEsquerda .list-group-item {
+            text-align-all: justify;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border: 1px solid black;
+            border-radius: 4px 4px;
+            margin: 3px;
+        }
+        #exercicios {
+            display: none;
+        }
+    </style>
 
 {% endblock %}
 
 
 
 {% block javascriptPlugins %}
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.js"></script>
+    <script src="/dist/js/jquery.form.js"></script>
+    <script src="/dist/js/iziToast.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
     <script type="text/javascript">
-        new Sortable(listaDireita, {
+
+        $("#clientes").on("change", function(){
+           if ($(this).val()!=''){
+               $("#exercicios").removeClass('d-none').addClass('d-flex');
+           }else{
+               $("#exercicios").addClass('d-none').removeClass('d-flex');
+           }
+           $("#clientes_id").val($(this).val());
+        });
+        new Sortable(listaEsquerda, {
+            group: 'shared',
+            animation: 150,
+            sort: true // To disable sorting: set sort to false
+        });
+        $(".listaDireita .list-group").each(function(item) {
+            $el = $(this)
+            new Sortable( $el[0] , {
+                group: {
+                    name: 'shared',
+                    pull: 'clone',
+                    put: false // Do not allow items to be put into this list
+                },
+                animation: 150
+            });
+        });
+/*        new Sortable(listaDireita, {
             group: {
                 name: 'shared',
                 pull: 'clone',
                 put: false // Do not allow items to be put into this list
             },
-            animation: 150,
-            sort: true // To disable sorting: set sort to false
-        });
-
-        new Sortable(listaEsquerda, {
-            group: 'shared',
             animation: 150
-        });
+        });*/
     </script>
 
 {% endblock %}

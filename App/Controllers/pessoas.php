@@ -10,6 +10,7 @@ use App\ControllerSeguro;
 
 class Pessoas Extends ControllerSeguro
 {
+    protected $nivel = [ 'admin' ];
 
     public function index()
     {
@@ -51,6 +52,7 @@ class Pessoas Extends ControllerSeguro
     public function salvarCadastrar()
     {
 
+        //ve se as senhas estao iguais
         if($_POST['senha']!=$_POST['confsenha']){
             $this->retornaErro('As senhas não estão iguais');
         }
@@ -59,6 +61,26 @@ class Pessoas Extends ControllerSeguro
 
 
         $db = Conexao::connect();
+
+        // ve se já nao tem usuario cadastrado com esse login
+        $sqlUsuario = "SELECT * FROM pessoas WHERE usuario=:usuario";
+        $queryUsuario = $db->prepare($sqlUsuario);
+        $queryUsuario->bindParam(":usuario", $_POST['usuario']);
+        $queryUsuario->execute();
+        if($queryUsuario->rowCount()==1){
+            $this->retornaErro('Erro ao cadatrar, nome de usuário em uso');
+        }
+
+        // ve se já nao tem usuario cadastrado com esse telefone
+        $sqlTelefone = "SELECT * FROM pessoas WHERE telefone=:telefone";
+        $queryTelefone = $db->prepare($sqlTelefone);
+        $queryTelefone->bindParam(":telefone", $_POST['telefone']);
+        $queryTelefone->execute();
+        if($queryTelefone->rowCount()==1){
+            $this->retornaErro('Erro ao cadastrar, telefone em uso');
+        }
+
+
 
         $sql = "INSERT INTO pessoas (nome, telefone, tipo, usuario, senha) VALUES (:nome, :telefone, :tipo, :usuario, :senha)";
         $query = $db->prepare($sql);
@@ -112,36 +134,125 @@ class Pessoas Extends ControllerSeguro
 
         $db = Conexao::connect();
 
-        $sql = "UPDATE pessoas SET nome=:nome, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
-
-        $query = $db->prepare($sql);
-        $query->bindParam(":nome", $_POST['nome']);
-        $query->bindParam(":usuario", $_POST['usuario']);
-        $query->bindParam(":tipo", $_POST['tipo']);
-        $query->bindParam(":senha", $criptografaSenha);
-        $query->bindParam(":id", $_POST['id']);
-        $query->execute();
-
-        if ($query->rowCount()==1) {
-            $this->retornaOK('A pessoa foi alterada com sucesso');
-        }else{
-            $this->retornaOK('Nenhum dado alterado');
+        // ve se já nao tem usuario cadastrado com esse login
+        $sqlUsuario = "SELECT * FROM pessoas WHERE usuario=:usuario and id!=:id";
+        $queryUsuario = $db->prepare($sqlUsuario);
+        $queryUsuario->bindParam(":id", $_POST['id']);
+        $queryUsuario->bindParam(":usuario", $_POST['usuario']);
+        $queryUsuario->execute();
+        if($queryUsuario->rowCount()==1){
+            $this->retornaErro('Erro ao editar, nome de usuário em uso');
         }
+
+        // ve se já nao tem usuario cadastrado com esse telefone
+        $sqlTelefone = "SELECT * FROM pessoas WHERE telefone=:telefone and id!=:id";
+        $queryTelefone = $db->prepare($sqlTelefone);
+        $queryTelefone->bindParam(":id", $_POST['id']);
+        $queryTelefone->bindParam(":telefone", $_POST['telefone']);
+        $queryTelefone->execute();
+        if($queryTelefone->rowCount()==1){
+            $this->retornaErro('Erro ao editar, telefone em uso');
+        }
+
+        if ($_POST['senha']!=''){
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":nome", $_POST['nome']);
+            $query->bindParam(":telefone", $_POST['telefone']);
+            $query->bindParam(":usuario", $_POST['usuario']);
+            $query->bindParam(":tipo", $_POST['tipo']);
+            $query->bindParam(":senha", $criptografaSenha);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('A pessoa foi alterada com sucesso');
+            }else{
+                $this->retornaErro('Nenhum dado alterado');
+            }
+        }else{
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":nome", $_POST['nome']);
+            $query->bindParam(":telefone", $_POST['telefone']);
+            $query->bindParam(":usuario", $_POST['usuario']);
+            $query->bindParam(":tipo", $_POST['tipo']);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('A pessoa foi alterada com sucesso');
+            }else{
+                $this->retornaErro('Nenhum dado alterado');
+            }
+        }
+
+
     }
 
     public function excluir(){
-        $db = Conexao::connect();
 
-        $sql = "DELETE FROM pessoas WHERE id=:id";
+        try{
+            $db = Conexao::connect();
 
-        $query = $db->prepare($sql);
-        $query->bindParam(":id", $_POST['id']);
-        $query->execute();
+            $sql = "DELETE FROM pessoas WHERE id=:id";
 
-        if ($query->rowCount()==1) {
-            $this->retornaOK('Excluido com sucesso');
-        }else{
-            $this->retornaErro('Erro ao excluir os dados');
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Excluido com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+
+    }
+
+    public function desativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE pessoas SET status='desativado' WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Alterado com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
+        }
+    }
+
+    public function ativar()
+    {
+        try{
+            $db = Conexao::connect();
+
+            $sql = "UPDATE pessoas SET status='ativo' WHERE id=:id";
+
+            $query = $db->prepare($sql);
+            $query->bindParam(":id", $_POST['id']);
+            $query->execute();
+
+            if ($query->rowCount()==1) {
+                $this->retornaOK('Alterado com com sucesso');
+            }else{
+                $this->retornaErro('Erro ao excluir os dados');
+            }
+        }catch(\Exception $exception){
+            $this->retornaErro($exception->getMessage());
         }
     }
 
@@ -149,7 +260,8 @@ class Pessoas Extends ControllerSeguro
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`  FROM pessoas WHERE 1 ";
+        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, IF(STRCMP(status,'ativo') = 0, 0, 1) as status  FROM pessoas WHERE 1 ";
+//        $sql = "SELECT `id`, `nome`, `telefone`, `usuario`, `tipo`, `status`  FROM pessoas WHERE 1 ";
 
         if ($busca!=''){
             $sql .= " and (
@@ -157,7 +269,8 @@ class Pessoas Extends ControllerSeguro
                         nome LIKE '%{$busca}%' OR
                         telefone LIKE '%{$busca}%' OR
                         usuario LIKE '%{$busca}%' OR
-                        tipo LIKE '%{$busca}%' 
+                        tipo LIKE '%{$busca}%' OR
+                        status LIKE '%{$busca}%'
                         ) ";
         }
 

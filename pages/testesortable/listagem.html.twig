@@ -1,7 +1,7 @@
 {% extends 'layouts/dashboard.html.twig' %}
 
 
-{% block title %} Pessoas | Listagem{% endblock %}
+{% block title %} | Categoria do Exercício | Listagem{% endblock %}
 {% block stylesheet %}
     <link href="/dist/js/jquery.bootgrid.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/dist/css/iziToast.min.css">
@@ -12,16 +12,16 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Pessoas
+                    <h1>Treino
                         <small>Listagem</small></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">Pessoa</li>
+                        <li class="breadcrumb-item active">Treino</li>
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 {% endblock %}
 
@@ -34,11 +34,10 @@
                 <table id="grid-data" class="table table-condensed table-hover table-striped">
                     <thead>
                     <tr>
-                        <th data-column-id="id" >Código</th>
-                        <th data-column-id="nome" data-order="desc" data-sortable="true">Nome</th>
-                        <th data-column-id="telefone" data-order="desc" data-sortable="true">Telefone</th>
-                        <th data-column-id="usuario" data-order="desc" data-sortable="true">Usuário</th>
-                        <th data-column-id="tipo" data-order="desc" data-sortable="true">Função</th>
+                        <th data-column-id="idtreinos" >Código</th>
+                        <th data-column-id="nome" data-order="desc" data-sortable="true">Cliente</th>
+                        <th data-column-id="nome_treino" data-order="desc" data-sortable="true">Treino
+                        <th data-column-id="status" data-order="desc" data-sortable="true">Status</th>
                         <th data-column-id="commands" data-formatter="commands" data-sortable="false">Ações</th>
                     </tr>
                     </thead>
@@ -57,7 +56,6 @@
     <script src="/dist/js/jquery.bootgrid.fa.js"></script>
     <script src="/dist/js/iziToast.js"></script>
     <script src="/dist/js/iziToastExcluir.js"></script>
-    <script src="/dist/js/iziToastDesativar.js"></script>
 {% endblock %}
 
 {% block jquery %}
@@ -66,42 +64,41 @@
         $(document).ready(function(){
             grid = $("#grid-data").bootgrid({
                 ajax: true,
-                url: "/pessoas/bootgrid",
+                url: "/testesortable/bootgrid",
                 statusMapping: {
                     0: "",
                     1: "table-danger"
                 },
-
                 formatters: {
                     "commands": function(column, row)
                     {
-                        return "<button type=\"button\" class=\"btn btn-primary command-edit\" data-row-id=\"" + row.id   + "\"><span class=\"fas fa-edit\"></span></button> " +
-                            "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.id + "\"><span class=\"fa fa-trash\"></span></button> " +
-                            (row.status==0?"<button type=\"button\" class=\"btn btn-info command-status\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>":"<button type=\"button\" class=\"btn btn-info command-status-ativar\" data-row-id=\"" + row.id + "\"><span class=\"fas fa-user-lock\"></span></button>");
+                        return "<button type=\"button\" class=\"btn btn-danger command-delete\" data-row-id=\"" + row.idtreinos   + "\"><span class=\"fas fa-trash\"></span></button> " +
+                            "<button type=\"button\" class=\"btn btn-primary command-view\" data-row-id=\"" + row.idtreinos   + "\"><span class=\"fas fa-eye\"></span></button> "+
+                            (row.status==0?"<button type=\"button\" class=\"btn btn-info command-status\" data-row-id=\"" + row.idtreinos + "\"><span class=\"fas fa-user-lock\"></span></button>":
+                                "<button type=\"button\" class=\"btn btn-info command-status-ativar\" data-row-id=\"" + row.idtreinos + "\"><span class=\"fas fa-user-lock\"></span></button>");
                     }
                 }
             }).on("loaded.rs.jquery.bootgrid", function()
             {
-                grid.find(".command-edit").on("click", function(e)
+                grid.find(".command-view").on("click", function(e)
                 {
-                    document.location = '/pessoas/formeditar/' + $(this).data("row-id");
-                }).end().find(".command-delete").on("click", function(e)
-                {
-                    iziToastExcluir($(this).data("row-id"));
+                    document.location = '/testesortable/listaExercicios/' + $(this).data("row-id");
                 }).end().find(".command-status").on("click", function(e)
                 {
                     iziToastDesativar($(this).data("row-id"));
                 }).end().find(".command-status-ativar").on("click", function(e)
                 {
                     iziToastAtivar($(this).data("row-id"));
+                }).end().find(".command-delete").on("click", function(e)
+                {
+                    iziToastExcluir($(this).data("row-id"));
                 });
             });
         });
 
-
         function excluir(id){
             $.post(
-                "/pessoas/excluir",
+                "/testesortable/excluir",
                 { id: id },
                 function( data ) {
                     if (data.status==0){
@@ -119,43 +116,25 @@
             );
         }
 
-        function desativar(id){
-            $.post(
-                "/pessoas/desativar",
-                { id: id },
-                function( data ) {
-                    if (data.status==0){
-                        iziToast.error({
-                            message: data.mensagem
-                        });
-                    }else{
-                        iziToast.success({
-                            message: data.mensagem
-                        });
-                        grid.bootgrid("reload");
-                    }
-                },
-                "json"
-            );
-        }
-        function iziToastAtivar(id){
+        function iziToastDesativar(id){
             iziToast.show({
                 timeout: 20000,
                 icon: 'fas fa-user-lock',
                 close: false,
                 overlay: true,
                 displayMode: 'once',
-                color: 'yellow',
+                color: 'dark',
                 id: 'question',
                 zindex: 999,
                 title: 'Desativar: ',
-                message: 'Deseja realmente reativar?',
+                message: 'Deseja realmente desativar?',
                 position: 'center',
                 buttons: [
                     ['<button><b>SIM</b></button>', function (instance, toast) {
 
+
                         $.post(
-                            "/pessoas/ativar",
+                            "/testesortable/desativar",
                             { id: id },
                             function( data ) {
                                 if (data.status==0){
@@ -183,6 +162,50 @@
             });
         }
 
+        function iziToastAtivar(id){
+            iziToast.show({
+                timeout: 20000,
+                icon: 'fas fa-user-lock',
+                close: false,
+                overlay: true,
+                displayMode: 'once',
+                color: 'yellow',
+                id: 'question',
+                zindex: 999,
+                title: 'Desativar: ',
+                message: 'Deseja realmente reativar?',
+                position: 'center',
+                buttons: [
+                    ['<button><b>SIM</b></button>', function (instance, toast) {
+
+                        $.post(
+                            "/testesortable/ativar",
+                            { id: id },
+                            function( data ) {
+                                if (data.status==0){
+                                    iziToast.error({
+                                        message: data.mensagem
+                                    });
+                                }else{
+                                    iziToast.success({
+                                        message: data.mensagem
+                                    });
+                                    grid.bootgrid("reload");
+                                }
+                            },
+                            "json"
+                        );
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }],
+                    ['<button>NÃO</button>', function (instance, toast) {
+
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+
+                    }, true],
+                ]
+            });
+        }
     </script>
 
 

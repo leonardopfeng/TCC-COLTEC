@@ -1,0 +1,157 @@
+{% extends 'layouts/dashboard.html.twig' %}
+
+
+
+{% block title %}| Cadastro Treinos{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="/dist/css/iziToast.min.css">
+
+    <style>
+        .list-group-item  {
+            text-align-all: justify;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border-radius: 4px 4px;
+            margin: 3px;
+        }
+        .list-group-item .informacoes{
+            text-align-all: justify;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            border-radius: 4px 4px;
+            margin: 3px;
+        }
+        @media only screen and (max-width: 600px) {
+            .list-group-item .informacoes{
+               align-self: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Visualização dos exercícios
+                        </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/testesortable/listaTreinos"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item active">Treino</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+{% endblock %}
+
+{% block content %}
+
+
+    <div id="exercicios">
+        <div class="list-group col-lg-12" id="accordion">
+            {% set i = 0 %}
+            {%  for exercicio in informacoes  %}
+                <div class="card">
+                    <div class="card-header" id="{{ i }}">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" data-toggle="collapse" data-target="#collapse{{ i }}" aria-expanded="true" aria-controls="collapse{{ i }}">
+                                {{ exercicio.nome_exercicio }}
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapse{{ i }}" class="collapse " aria-labelledby="{{ i }}" data-parent="#accordion">
+                        <div class="list-group">
+                            {% for informacao in exercicio.info %}
+                                <div class="list-group-item">
+                                    <div class="informacoes">
+                                        Serie: {{ informacao.serie }} x <br>
+                                        Repetição: {{ informacao.repeticao }} x <br>
+                                        Carga: {{ informacao.carga }} KG <br>
+                                    </div>
+                                    {# modal #}
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#videoModal" value={{ informacao.url_video }}>
+                                        Visualizar vídeo
+                                    </button>
+                                    {# fim modal #}
+                                </div>
+                            {%  endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% set i = i + 1 %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="d-none" id="exercicios">
+    </div>
+
+   {# modal #}
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <iframe id="youtube" allowtransparency="true" scrolling="no" width="100%" height="700" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# fim modal #}
+
+
+{% endblock %}
+
+
+
+{% block javascriptPlugins %}
+    <script src="/dist/js/jquery.form.js"></script>
+    <script src="/dist/js/iziToast.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+
+    <script type="text/javascript">
+        $("button").click(function (){
+            var video = $(this).val();
+            var modal = $('#videoModal');
+
+            modal.find('iframe').attr('src', 'http://www.youtube.com/embed/' + video);
+        });
+    </script>
+{% endblock %}
+
+
+
+{% block jquery %}
+    <script>
+        $(document).ready(function(){
+            $('.jsonForm').ajaxForm({
+                dataType:  'json',
+
+                success:   function(d){
+                    if (d.status==0){
+                        iziToast.error({
+                            message: d.mensagem
+                        });
+                    }else{
+                        iziToast.success({
+                            message: d.mensagem
+                        });
+                        $('.jsonForm').trigger("reset");
+                    }
+                }
+
+            });
+
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

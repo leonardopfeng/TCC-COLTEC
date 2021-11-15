@@ -12,8 +12,19 @@ class login Extends Controller
     {
         session_start();
         if(isset($_SESSION['logado']) && $_SESSION['logado']){
-            header("location: /pessoas");
-            exit;
+
+           if($_SESSION['tipo']=='cliente'){
+               header("location: /testesortable/listaTreinos");
+               exit;
+           }
+           elseif($_SESSION['tipo']=='personal'){
+               header("location: /testesortable/formcadastrar");
+               exit;
+           }
+           elseif($_SESSION['tipo']=='admin'){
+               header("location: /grupo_muscular");
+               exit;
+           }
         }
 
         echo $this->template->twig->render('login/login.html.twig');
@@ -30,7 +41,7 @@ class login Extends Controller
 
         $senhacriptografada = $this->criptografa($senha);
 
-        $sql = "SELECT * FROM pessoas WHERE usuario=:usuario AND senha=:senha";
+        $sql = "SELECT * FROM pessoas WHERE usuario=:usuario AND senha=:senha AND status='ativo'";
 
         $resultados = $db ->prepare($sql);
 

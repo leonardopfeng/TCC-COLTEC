@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
 --
--- Host: localhost    Database: projeto-base
+-- Host: 127.0.0.1    Database: projeto-base
 -- ------------------------------------------------------
 -- Server version	5.7.24
 
@@ -39,7 +39,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (3,2),(6,2);
+INSERT INTO `clientes` VALUES (12,5);
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,8 +57,8 @@ CREATE TABLE `exercicios` (
   `grupo_muscular` int(11) NOT NULL,
   PRIMARY KEY (`id_exercicio`),
   KEY `fk_exercicios_grupo_muscular1_idx` (`grupo_muscular`),
-  CONSTRAINT `fk_exercicios_grupo_muscular1` FOREIGN KEY (`grupo_muscular`) REFERENCES `grupo_muscular` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_exercicios_grupo_muscular1` FOREIGN KEY (`grupo_muscular`) REFERENCES `grupo_muscular` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `exercicios` (
 
 LOCK TABLES `exercicios` WRITE;
 /*!40000 ALTER TABLE `exercicios` DISABLE KEYS */;
-INSERT INTO `exercicios` VALUES (3,'Gustavo','321321',1),(4,'Leonardo','dawdawdwdaw',3),(5,'dwdwadawdwa','dawdwdwadawdwdw',2),(6,'Leonardo','3213213213213',1),(7,'Puxada traseira','dawdawdaw',4);
+INSERT INTO `exercicios` VALUES (9,'Agachamento','dawdwadwa',6),(11,'Supino','111',7);
 /*!40000 ALTER TABLE `exercicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,6 +97,7 @@ CREATE TABLE `exercicios_treino` (
 
 LOCK TABLES `exercicios_treino` WRITE;
 /*!40000 ALTER TABLE `exercicios_treino` DISABLE KEYS */;
+INSERT INTO `exercicios_treino` VALUES (31,9,0,2,1,1),(32,9,0,2,2,2),(32,11,0,2,2,1);
 /*!40000 ALTER TABLE `exercicios_treino` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +112,7 @@ CREATE TABLE `grupo_muscular` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,7 +121,7 @@ CREATE TABLE `grupo_muscular` (
 
 LOCK TABLES `grupo_muscular` WRITE;
 /*!40000 ALTER TABLE `grupo_muscular` DISABLE KEYS */;
-INSERT INTO `grupo_muscular` VALUES (1,'Triceps'),(2,'Biceps'),(3,'Peito'),(4,'Costas');
+INSERT INTO `grupo_muscular` VALUES (6,'Quadríceps'),(7,'Peito');
 /*!40000 ALTER TABLE `grupo_muscular` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +144,7 @@ CREATE TABLE `mensalidades` (
   PRIMARY KEY (`id`),
   KEY `fk_mensalidades_pessoas1_idx` (`cliente`),
   CONSTRAINT `fk_mensalidades_pessoas1` FOREIGN KEY (`cliente`) REFERENCES `pessoas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,7 +153,6 @@ CREATE TABLE `mensalidades` (
 
 LOCK TABLES `mensalidades` WRITE;
 /*!40000 ALTER TABLE `mensalidades` DISABLE KEYS */;
-INSERT INTO `mensalidades` VALUES (1,6,11.00,1.00,10.00,'2021-09-27 14:22:03',NULL,NULL);
 /*!40000 ALTER TABLE `mensalidades` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,7 +179,7 @@ CREATE TABLE `personal` (
 
 LOCK TABLES `personal` WRITE;
 /*!40000 ALTER TABLE `personal` DISABLE KEYS */;
-INSERT INTO `personal` VALUES (2,'2','2021-06-23 14:08:34');
+INSERT INTO `personal` VALUES (5,'123',NULL),(10,'321321321','2021-10-07 12:41:10');
 /*!40000 ALTER TABLE `personal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +199,7 @@ CREATE TABLE `pessoas` (
   `senha` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario_UNIQUE` (`usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `pessoas` (
 
 LOCK TABLES `pessoas` WRITE;
 /*!40000 ALTER TABLE `pessoas` DISABLE KEYS */;
-INSERT INTO `pessoas` VALUES (1,'Leonardo Pfeng','44','admin','31231','356a192b7913b04c54574d18c28d46e6395428ab'),(2,'Leonardo Pfeng','2','personal','2','da4b9237bacccdf19c0760cab7aec4a8359010b0'),(3,'Gustavo','55','admin','312312321','da39a3ee5e6b4b0d3255bfef95601890afd80709'),(5,'Leonardoa','42424214','admin','lelis','40bd001563085fc35165329ea1ff5c5ecbdbbeef'),(6,'A','32132132132132','cliente','123','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2');
+INSERT INTO `pessoas` VALUES (5,'LeonardoaAAAAAAA','42424214','admin','lelis','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2'),(8,'Gabriel','321321321321321','cliente','naka','40bd001563085fc35165329ea1ff5c5ecbdbbeef'),(10,'Puxada frontal','1','personal','3','77de68daecd823babbb58edb1c8e14d7106e83bb'),(11,'111','111','admin','444','9a3e61b6bcc8abec08f195526c3132d5a4a98cc0'),(12,'Leonardo','42424214','cliente','111','6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2');
 /*!40000 ALTER TABLE `pessoas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -227,9 +227,9 @@ CREATE TABLE `treinos` (
   PRIMARY KEY (`idtreinos`),
   KEY `fk_treinos_clientes1_idx` (`clientes_pessoa`),
   KEY `fk_treinos_personal1_idx` (`personal_pessoa`),
-  CONSTRAINT `fk_treinos_clientes1` FOREIGN KEY (`clientes_pessoa`) REFERENCES `clientes` (`pessoa`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_treinos_personal1` FOREIGN KEY (`personal_pessoa`) REFERENCES `personal` (`pessoa`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_treinos_clientes1` FOREIGN KEY (`clientes_pessoa`) REFERENCES `clientes` (`pessoa`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_treinos_personal1` FOREIGN KEY (`personal_pessoa`) REFERENCES `personal` (`pessoa`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -238,6 +238,7 @@ CREATE TABLE `treinos` (
 
 LOCK TABLES `treinos` WRITE;
 /*!40000 ALTER TABLE `treinos` DISABLE KEYS */;
+INSERT INTO `treinos` VALUES (31,12,5,'ativo'),(32,12,5,'ativo');
 /*!40000 ALTER TABLE `treinos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -250,4 +251,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-09-27 16:38:53
+-- Dump completed on 2021-10-07 13:03:18

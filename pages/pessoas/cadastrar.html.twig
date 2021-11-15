@@ -16,7 +16,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="/pessoas"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li class="breadcrumb-item active">Pessoa</li>
                     </ol>
                 </div>
@@ -72,7 +72,7 @@
                             </div>
 
                             <div id="admin" style="display: none">
-                                admin
+
                             </div>
 
                            <div id="cliente" style="display: none">
@@ -104,6 +104,7 @@
 
     </section>
 
+
 {% endblock %}
 
 
@@ -111,11 +112,15 @@
 {% block javascriptPlugins %}
     <script src="/dist/js/jquery.form.js"></script>
     <script src="/dist/js/iziToast.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
 {% endblock %}
 
 {% block jquery %}
     <script>
         $(document).ready(function(){
+             var $Telefone = $("#telefone");
+             $Telefone.mask('(00)00000-0000');
+
             $('.jsonForm').ajaxForm({
                 dataType:  'json',
 
@@ -133,6 +138,8 @@
                 }
 
             });
+
+
 
             $("#tipo").on("change", function (){
                 switch ($(this).val()){

@@ -7,7 +7,7 @@
 
     {% block meta %}{% endblock %}
 
-    <title>Projeto Teste {% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
@@ -33,7 +33,14 @@ to get the desired effect
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
     {% include 'includes/navbar.html.twig' %}
-    {% include 'includes/sidebar.html.twig' %}
+    {% if (session.tipo=='admin') %}
+        {% include 'includes/sidebar.html.twig' %}
+    {% elseif (session.tipo=='cliente') %}
+        {% include 'includes/sidebarCliente.html.twig' %}
+    {% elseif (session.tipo=='personal') %}
+        {% include 'includes/sidebarPersonal.html.twig' %}
+    {% endif %}
+
 
     <div class="content-wrapper">
         {% block breadcrumb %}{% endblock %}
