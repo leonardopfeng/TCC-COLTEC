@@ -45,7 +45,7 @@ class Pessoas Extends ControllerSeguro
 
         $linha = $query->fetch();
 
-        echo $this->template->twig->render('pessoas/editar.html.twig', compact('linha','linhaPersonal'));
+        echo $this->template->twig->render('pessoas/editar.html.twig', compact('linha'));
     }
 
 
