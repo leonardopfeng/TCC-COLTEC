@@ -53,14 +53,14 @@
                                 <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone" required value="{{ linha['telefone'] }}"">
                             </div>
 
-                            <div class="form-group">
-                                <label for="tipo">Tipo</label>
-                                <select class="form-control" id="tipo" name="tipo" required value="{{ linha['tipo'] }}">
-                                    <option value="admin">Admin</option>
-                                    <option value="personal">Personal</option>
-                                    <option value="cliente">Cliente</option>
-                                </select>
-                            </div>
+{#                            <div class="form-group">#}
+{#                                <label for="tipo">Tipo</label>#}
+{#                                <select class="form-control" id="tipo" name="tipo" required value="{{ linha['tipo'] }}">#}
+{#                                    <option value="admin">Admin</option>#}
+{#                                    <option value="personal">Personal</option>#}
+{#                                    <option value="cliente">Cliente</option>#}
+{#                                </select>#}
+{#                            </div>#}
 
                             <div class="form-group">
                                     <label for="usuario">Usuario</label>
@@ -78,6 +78,8 @@
                             </div>
 
                         </div>
+
+
                         <!-- /.box-body -->
 
                         <div class="card-footer">
@@ -126,6 +128,32 @@
                     }
                 }
 
+            });
+
+            $("#tipo").on("change", function (){
+                switch ($(this).val()){
+                    case 'admin':
+                        $("#admin").show();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                    case 'personal':
+                        $("#admin").hide();
+                        $("#personal").show();
+                        $("#cliente").hide();
+                        $("#cref").mask('000000-A/AA');
+                        break;
+                    case 'cliente':
+                        $("#personal").hide();
+                        $("#cliente").show();
+                        $("#admin").hide();
+                        break;
+                    case '':
+                        $("#admin").hide();
+                        $("#personal").hide();
+                        $("#cliente").hide();
+                        break;
+                }
             });
         });
     </script>
