@@ -160,6 +160,7 @@ class testesortable Extends ControllerSeguro
 
         }catch(\Exception $error){
             $db->rollBack();
+            $this->retornaErro('Erro ao inserir');
             echo 'Erro ao inserir';
         }
 
