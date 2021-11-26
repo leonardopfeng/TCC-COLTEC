@@ -80,6 +80,14 @@ class Pessoas Extends ControllerSeguro
             $this->retornaErro('Erro ao cadastrar, telefone em uso');
         }
 
+        $sqlCref = "SELECT * FROM personal WHERE cref=:cref";
+        $queryCref = $db->prepare($sqlCref);
+        $queryCref->bindParam(":cref", $_POST['cref']);
+        $queryCref->execute();
+        if($queryCref->rowCount()==1){
+            $this->retornaErro('Erro ao cadastrar, personal já cadastrado com este CREF');
+        }
+
 
 
         $sql = "INSERT INTO pessoas (nome, telefone, tipo, usuario, senha) VALUES (:nome, :telefone, :tipo, :usuario, :senha)";
