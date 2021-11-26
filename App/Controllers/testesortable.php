@@ -27,7 +27,7 @@ class testesortable Extends ControllerSeguro
 
         $db = Conexao::connect();
 
-        $sql = "SELECT * FROM treinos WHERE clientes_pessoa = $_SESSION[id]";
+        $sql = "SELECT * FROM treinos WHERE clientes_pessoa = $_SESSION[id] and status ='ativo'";
         $query = $db->prepare($sql);
         $query->execute();
 
@@ -123,7 +123,7 @@ class testesortable Extends ControllerSeguro
 
             $db = Conexao::connect();
             $db->beginTransaction();
-            $query = $db->prepare("INSERT INTO treinos (clientes_pessoa, personal_pessoa, nome, status) VALUES (:clientes, :personal, :nome, 'ativo') ");
+            $query = $db->prepare("INSERT INTO treinos (clientes_pessoa, personal_pessoa, nome, status, data_inicio) VALUES (:clientes, :personal, :nome, 'ativo', NOW()) ");
             $query->bindParam(':clientes', $cliente);
             $query->bindParam(':personal', $_SESSION['id']);
             $query->bindParam(':nome', $nome_treino);
@@ -253,7 +253,7 @@ class testesortable Extends ControllerSeguro
     public function bootgrid()
     {
         $busca = addslashes($_POST['searchPhrase']);
-        $sql = "SELECT treinos.idtreinos, pessoas.nome, IF(STRCMP(treinos.status,'ativo') = 0, 0, 1) as status, treinos.nome as nome_treino
+        $sql = "SELECT treinos.idtreinos, pessoas.nome, IF(STRCMP(treinos.status,'ativo') = 0, 0, 1) as status, treinos.nome as nome_treino, data_inicio
                 FROM TREINOS 
                 INNER JOIN pessoas ON pessoas.id=treinos.clientes_pessoa 
                 WHERE personal_pessoa = $_SESSION[id]
