@@ -5,8 +5,9 @@ namespace App\Controllers;
 
 use App\Controller;
 use App\Conexao;
+use App\ControllerSeguro;
 
-class Index Extends Controller
+class Index Extends ControllerSeguro
 {
     public function index(){
 
@@ -15,6 +16,10 @@ class Index Extends Controller
 //        $db = Conexao::connect();
 //        $resultado = $db->query("SHOW TABLES");
 //        $tabela = $resultado->fetchAll();
+
+
+        header("location: /login/");
+
 
 
         echo $this->template->twig->render('inicial.html.twig');

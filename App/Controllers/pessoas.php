@@ -41,7 +41,7 @@ class Pessoas Extends ControllerSeguro
         $query = $db->prepare($sql);
         $query->bindParam(":id", $id);
 
-        $resultado = $query->execute();
+        $query->execute();
 
         $linha = $query->fetch();
 
@@ -78,6 +78,14 @@ class Pessoas Extends ControllerSeguro
         $queryTelefone->execute();
         if($queryTelefone->rowCount()==1){
             $this->retornaErro('Erro ao cadastrar, telefone em uso');
+        }
+
+        $sqlCref = "SELECT * FROM personal WHERE cref=:cref";
+        $queryCref = $db->prepare($sqlCref);
+        $queryCref->bindParam(":cref", $_POST['cref']);
+        $queryCref->execute();
+        if($queryCref->rowCount()==1){
+            $this->retornaErro('Erro ao cadastrar, personal já cadastrado com este CREF');
         }
 
 
@@ -155,13 +163,12 @@ class Pessoas Extends ControllerSeguro
         }
 
         if ($_POST['senha']!=''){
-            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo, senha=:senha WHERE id=:id";
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, senha=:senha WHERE id=:id";
 
             $query = $db->prepare($sql);
             $query->bindParam(":nome", $_POST['nome']);
             $query->bindParam(":telefone", $_POST['telefone']);
             $query->bindParam(":usuario", $_POST['usuario']);
-            $query->bindParam(":tipo", $_POST['tipo']);
             $query->bindParam(":senha", $criptografaSenha);
             $query->bindParam(":id", $_POST['id']);
             $query->execute();
@@ -172,15 +179,15 @@ class Pessoas Extends ControllerSeguro
                 $this->retornaErro('Nenhum dado alterado');
             }
         }else{
-            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario, tipo=:tipo WHERE id=:id";
+            $sql = "UPDATE pessoas SET nome=:nome, telefone=:telefone, usuario=:usuario WHERE id=:id";
 
             $query = $db->prepare($sql);
             $query->bindParam(":nome", $_POST['nome']);
             $query->bindParam(":telefone", $_POST['telefone']);
             $query->bindParam(":usuario", $_POST['usuario']);
-            $query->bindParam(":tipo", $_POST['tipo']);
             $query->bindParam(":id", $_POST['id']);
             $query->execute();
+
 
             if ($query->rowCount()==1) {
                 $this->retornaOK('A pessoa foi alterada com sucesso');
@@ -188,6 +195,8 @@ class Pessoas Extends ControllerSeguro
                 $this->retornaErro('Nenhum dado alterado');
             }
         }
+
+
 
 
     }
